@@ -1,4 +1,4 @@
-#
+ #
 # Copyright (C) 2020 narra.eu
 #
 # This file is part of Narra Platform Core.
@@ -72,7 +72,7 @@ module Narra
             end
 
             # return token in json when request is not from browser
-            present_ok_generic(:token, @token)
+            present_object_generic(:token, @token)
           end
         end
 
@@ -86,7 +86,7 @@ module Narra
           end
 
           get '/providers' do
-            present_ok_generic(:providers, Narra::Auth::PROVIDERS.collect {|provider| {name: provider} })
+            present_object_generic(:providers, Narra::Auth::PROVIDERS.collect {|provider| {name: provider} })
           end
         end
       end

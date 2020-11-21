@@ -48,7 +48,7 @@ module Narra
             # check if there is a project by the name or title
             validation = true if params[:name] && Narra::Library.where(name: params[:name]).count == 0
             # if the project exists return ok
-            present_ok_generic(:validation, validation)
+            present_object_generic(:validation, validation)
           end
 
           desc 'Return a specific library.'
@@ -86,11 +86,13 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author]).size > 0
               # set purged flag
-              library.update_attributes(purged: true)
-              # execute
-              Narra::Core.purge_library(library)
+              unless library.purged
+                library.update_attributes(purged: true)
+                # execute
+                Narra::Core.purge_library(library)
+              end
               # present
-              present_ok
+              present_object_generic(:id, params[:id])
             end
           end
         end

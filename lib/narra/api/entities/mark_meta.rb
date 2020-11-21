@@ -24,8 +24,13 @@ module Narra
     module Entities
       class MarkMeta < Grape::Entity
 
-        expose :in, if: lambda { |model, options| !model.in.nil? }
-        expose :out, if: lambda { |model, options| !model.out.nil? }
+        expose :in, if: lambda { |model| !model.input.nil? } do |model|
+          model.input
+        end
+
+        expose :out, if: lambda { |model| !model.output.nil? } do |model|
+          model.output
+        end
       end
     end
   end

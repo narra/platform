@@ -44,7 +44,7 @@ module Narra
           get '/me' do
             authenticate!
             # return events
-            present_ok(Event.user(current_user), Event, Narra::API::Entities::Event)
+            present_object(Event.user(current_user), Event, Narra::API::Entities::Event)
           end
         end
       end

@@ -33,7 +33,7 @@ module Narra
           item = get_item(model.clip, options)
           # basic clip output
           if item.nil? || !item.prepared?
-            output = {name: model.clip, thumbnail: model.clip == 'black' ? thumbnail_black : thumbnail_empty}
+            output = {name: model.clip, thumbnail: model.clip == 'black' ? thumbnail({ type: :black }) : thumbnail({ type: :empty })}
           else
             output = {id: item._id.to_s, name: model.clip, type: item.type, thumbnail: item.url_thumbnail}
           end

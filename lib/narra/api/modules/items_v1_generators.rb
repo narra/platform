@@ -36,7 +36,7 @@ module Narra
         resource :items do
 
           desc 'Regenerate specified generator. Data will be erased.'
-          get ':id/regenerate/:generator' do
+          get ':id/generate/:generator' do
             return_one_custom(Item, :id, true, [:author]) do |item, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
@@ -52,7 +52,7 @@ module Narra
               # run generator process
               item.generate
               # present
-              present_ok
+              present_object(:id, params[:id])
             end
           end
         end

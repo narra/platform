@@ -31,7 +31,7 @@ module Narra
               id: item._id.to_s,
               name: item.name,
               type: item.type,
-              thumbnail: item.url_thumbnail.nil? ? thumbnail(item.type) : item.url_thumbnail
+              thumbnail: item.url_thumbnail.nil? ? thumbnail(item) : item.url_thumbnail
           }}
         end
 

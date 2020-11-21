@@ -40,6 +40,8 @@ module Narra
           model.is_shared?
         end
 
+        include Narra::API::Entities::Templates::Thumbnails
+
         expose :generators, if: lambda { |model, options| (options[:type] == :detail_scenario) && model.type == :scenariolibrary} do |model, options|
           model.generators.collect { |generator|
             {
@@ -61,9 +63,6 @@ module Narra
             }
           }
         end
-
-        expose :visualizations, if: lambda { |model, options| (options[:type] == :detail_scenario || options[:type] == :detail_project) && model.type == :scenarioproject}
-        expose :layouts, if: lambda { |model, options| (options[:type] == :detail_scenario || options[:type] == :detail_project) && model.type == :scenarioproject}
       end
     end
   end

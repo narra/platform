@@ -62,7 +62,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
               # present
-              present_ok_generic_options('metadata', item.meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
+              present_object_generic_options(:metadata, item.meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
             end
           end
 
@@ -72,7 +72,7 @@ module Narra
             # process
             meta = metadata_new
             # present
-            present_ok_generic_options('metadata', meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
+            present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
           end
 
           desc 'Return a specific metadata for a specific item.'
@@ -86,7 +86,7 @@ module Narra
               # check existence
               error_not_found! if meta.nil?
               # otherwise present
-              present_ok_generic_options('metadata', meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
+              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
             end
           end
 
@@ -103,7 +103,7 @@ module Narra
               # destroy
               meta.destroy
               # present
-              present_ok
+              present_object(:id, params[:id])
             end
           end
 
@@ -126,7 +126,7 @@ module Narra
               # update metadata
               meta = item.update_meta(name: params[:meta], value: params[:value], generator: params[:generator], new_generator: params[:new_generator], marks: marks, author: author)
               # present
-              present_ok_generic_options('metadata', meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
+              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::MetaItem, type: 'item'})
             end
           end
 
@@ -141,7 +141,7 @@ module Narra
               metadata_new
             end
             # present
-            present_ok
+            present_object(:ids, params[:items])
           end
         end
       end

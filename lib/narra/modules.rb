@@ -20,5 +20,5 @@
 #
 
 module Narra
-  MODULES = Gem.loaded_specs.select { |g| /^narra/ =~ g }.values
+  MODULES = Gem.loaded_specs.select { |_, spec| spec.metadata.key?("narra") && spec.metadata["narra"] == "module" }.values.collect { |m| {name: m.name, version: m.version.version, summary: m.summary, description: m.description, authors: m.authors, email: m.email, homepage: m.homepage, license: m.license} }
 end

@@ -35,7 +35,8 @@ module Narra
           if roles.size > 0
             if roles.include?(:admin)
               objects = model.limit(params[:limit])
-            else roles.include?(:user)
+            else
+              roles.include?(:user)
               objects = model.all.select { |o| is_public?(o) || (authorize(authorization, o) & [:author, :contributor, :parent_author, :parent_contributor]).size > 0 }
             end
           else
@@ -46,7 +47,7 @@ module Narra
             end
           end
           # present
-          present_ok(objects, model, entity, feature)
+          present_object(objects, model, entity, feature)
         end
 
         # Generic method for returning of the specific object based on the owner
@@ -54,7 +55,7 @@ module Narra
           return_one_custom(model, key, authentication, authorization) do |object, roles, public|
             # resolve
             if (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0 || public
-              present_ok(object, model, entity, 'detail', options)
+              present_object(object, model, entity, 'detail', options)
             else
               error_not_authorized!
             end
@@ -69,6 +70,8 @@ module Narra
           if object.nil?
             error_not_found!
           else
+            # errors container
+            errors = []
             # is public
             public = is_public?(object)
             # custom action
@@ -105,7 +108,7 @@ module Narra
             # probe
             object.probe if object.is_a? Narra::Tools::Probeable
             # present
-            present_ok(object, model, entity, 'detail')
+            present_object(object, model, entity, 'detail')
           else
             error_unknown!
           end
@@ -122,7 +125,7 @@ module Narra
             # probe
             object.probe if object.is_a? Narra::Tools::Probeable
             # present
-            present_ok(object, model, entity, 'detail')
+            present_object(object, model, entity, 'detail')
           end
         end
 
@@ -136,7 +139,7 @@ module Narra
             # save
             object.destroy
             # present
-            present_ok
+            present_object(key, params[key])
           end
         end
 

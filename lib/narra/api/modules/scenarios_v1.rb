@@ -48,7 +48,7 @@ module Narra
             # check if there is a project by the name or title
             validation = true if params[:name] && params[:type] && Narra::Scenario.where(name: params[:name], type: params[:type]).count == 0
             # if the project exists return ok
-            present_ok_generic(:validation, validation)
+            present_object_generic(:validation, validation)
           end
 
           desc 'Return a specific library.'
@@ -91,7 +91,7 @@ module Narra
                 # delete
                 scenario.destroy
                 # present
-                present_ok
+                present_object(:id, params[:id])
               end
             end
           end

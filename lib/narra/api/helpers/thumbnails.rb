@@ -24,32 +24,11 @@ module Narra
     module Helpers
       module Thumbnails
 
-        def thumbnail_text
-          thumbnail(:text)
-        end
-
-        def thumbnail_video
-          thumbnail(:video)
-        end
-
-        def thumbnail_audio
-          thumbnail(:audio)
-        end
-
-        def thumbnail_image
-          thumbnail(:image)
-        end
-
-        def thumbnail_empty
-          thumbnail(:empty)
-        end
-
-        def thumbnail_black
-          thumbnail(:black)
-        end
-
-        def thumbnail(type)
-          "http://#{options[:env]['HTTP_HOST']}/images/item_#{type.to_s}.png"
+        def thumbnail(model)
+          # check for type
+          type = defined?(model.type) ? model.type : (model[:type].nil? ? :empty : model[:type])
+          # resolve
+          "http://#{options[:env]['HTTP_HOST']}/images/#{type.to_s}.png"
         end
       end
     end

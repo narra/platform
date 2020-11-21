@@ -35,14 +35,11 @@ gem 'rack-cors'
 gem 'tzinfo-data'
 gem 'jwt'
 gem 'bson', '~> 4.5.0'
-#gem 'narra-core', :path => "../platform-core"
 gem 'narra-core', :git => 'https://github.com/narra/platform-core.git'
-#gem 'narra-youtube', :git => 'https://github.com/CAS-FAMU/narra-youtube.git'
-#gem 'narra-lemmatizer', :git => 'https://github.com/CAS-FAMU/narra-lemmatizer.git'
-#gem 'narra-keyword-synth', :git => 'https://github.com/petrpulc/narra-keyword-synth.git'
 gem 'rspec-rails', :group => [:test, :development]
 gem 'rspec-mocks', :group => [:test, :development]
 gem 'ruby-debug-ide', :group => :development
+gem 'thin', :group => :development
 gem 'debase', :group => :development
 gem 'mongoid-rspec', :group => :test
 gem 'factory_bot_rails', :group => :test

@@ -41,14 +41,14 @@ module Narra
             # authorize
             type = authorize([:admin]).size > 0 ? 'admin' : ''
             # present
-            present_ok(User.all, User, Narra::API::Entities::User, type)
+            present_object(User.all, User, Narra::API::Entities::User, type)
           end
 
           desc "Return logged user in the current session."
           get 'me' do
             authenticate!
             # present
-            present_ok(current_user, User, Narra::API::Entities::User, 'admin')
+            present_object(current_user, User, Narra::API::Entities::User, 'admin')
           end
 
           desc "Signout logged user in the current session."
@@ -57,7 +57,7 @@ module Narra
             # signout
             signout
             # return
-            present_ok
+            present_object(:done, true)
           end
 
           desc "Return roles."
@@ -66,7 +66,7 @@ module Narra
             # get authorized
             error_not_authorized! unless authorize([:author]).size > 0
             # present
-            present_ok_generic(:roles, present(User.all_roles))
+            present_object_generic(:roles, present(User.all_roles))
           end
 
           desc "Return a specific user."

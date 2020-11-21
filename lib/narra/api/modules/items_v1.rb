@@ -53,7 +53,7 @@ module Narra
             # if nil return error
             error_not_found! if proxies.nil? or proxies.empty?
             # otherwise return proper item proxy
-            present_ok_generic(:items, present(proxies))
+            present_object_generic_options(:proxies, proxies, {with: Narra::API::Entities::Proxy })
           end
 
           desc 'Delete a specific item.'
@@ -61,10 +61,10 @@ module Narra
             return_one_custom(Item, :id, true, [:author]) do |object, roles, public|
               # authorization
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
-              # save
+              # destroy
               object.destroy
               # present
-              present_ok
+              present_object_generic(:id, params[:id])
             end
           end
         end

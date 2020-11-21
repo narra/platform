@@ -49,7 +49,7 @@ module Narra
             validation = true if params[:name] && Narra::Project.where(name: params[:name]).count == 0
             validation = true if params[:title] && Narra::Project.where(title: params[:title]).count == 0
             # if the project exists return ok
-            present_ok_generic(:validation, validation)
+            present_object_generic(:validation, validation)
           end
 
           desc 'Return a specific project.'

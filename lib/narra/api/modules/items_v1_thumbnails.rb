@@ -41,7 +41,7 @@ module Narra
             thumbnails = Narra::Thumbnail.all.sample(params[:count].to_i).collect { |thumbnail| thumbnail.file.url }
 
             # present
-            present_ok_generic('thumbnails', thumbnails)
+            present_object_generic(:thumbnails, thumbnails)
           end
         end
       end

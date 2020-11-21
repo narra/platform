@@ -36,39 +36,35 @@ module Narra
         resource :items do
           desc 'Create new item.'
           post 'new' do
-            required_attributes! [:items]
+            required_attributes! [:candidates]
             # authenticate
             authenticate!
             # authorization
             error_not_authorized! unless authorize([:author]).size > 0
             # items log
             items = []
+            errors = []
             # check for items
-            if params[:items].respond_to?('each')
+            if params[:candidates].respond_to?('each')
               # iterate over all items
-              params[:items].each do |item|
+              params[:candidates].each do |candidate|
                 # trying to get library
-                library = Library.find(item[:library])
-                # input metadata container
-                metadata = []
-                # check for metadata
-                if !item[:metadata].nil? && !item[:metadata].empty?
-                  # iterate through hash
-                  item[:metadata].each do |key, value|
-                    # store new source metadata
-                    metadata << {name: key, value: value}
-                  end
-                end
-                # parse connector
-                connector = item[:connector].to_sym
-                # check for options
-                options = (item[:options].nil? ? {} : item[:options]).merge({user_metadata: metadata})
+                library = Library.find(candidate[:library])
+                # parse proxy
+                proxy = Narra::Tools::Proxy.parse(candidate[:proxy])
                 # add new item
-                items << Narra::Core.add_item(item[:url], current_user, library, connector, options)
+                begin
+                  items << Narra::Core.add_item(proxy, library, current_user)
+                rescue => error
+                  errors << {
+                      message: "Item #{proxy.name} failed.",
+                      trace: [candidate.to_json, error.full_message]
+                  }
+                end
               end
             end
             # present stats
-            present_ok_generic(:items, items.collect { |item| item._id.to_s })
+            present_object_generic(:ids, items.collect { |item| item._id.to_s }, errors)
           end
         end
       end

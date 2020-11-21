@@ -41,14 +41,14 @@ module Narra
             # get authorized
             error_not_authorized! unless authorize([:admin]).size > 0
             # present
-            present_ok_generic(:settings, Narra::Tools::Settings.all)
+            present_object_generic(:settings, Narra::Tools::Settings.all)
           end
 
           desc "Return defaults."
           get 'defaults' do
             authenticate!
             # present
-            present_ok_generic(:defaults, Narra::Tools::Settings.defaults)
+            present_object_generic(:defaults, Narra::Tools::Settings.defaults)
           end
 
           desc "Return a specific setting."
@@ -60,7 +60,7 @@ module Narra
             if setting.nil?
               error_not_found
             else
-              present_ok_generic(:setting, present({name: params[:name], value: setting}))
+              present_object_generic(:setting, present({name: params[:name], value: setting}))
             end
           end
 
@@ -74,7 +74,7 @@ module Narra
             # update
             Narra::Tools::Settings.set(params[:name], params[:value])
             # present
-            present_ok
+            present_object(:setting, Narra::Tools::Settings.get(params[:name]))
           end
         end
       end

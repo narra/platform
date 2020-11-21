@@ -42,10 +42,10 @@ module Narra
             return_one_custom(Project, :name, false, [:author]) do |project, roles, public|
               # if not authenticated or nto contributor or author return just public otherwise return all
               if (roles & [:admin, :author, :contributor]).size > 0
-                present_ok(project.sequences.limit(params[:limit]), Sequence, Narra::API::Entities::Sequence)
+                present_object(project.sequences.limit(params[:limit]), Sequence, Narra::API::Entities::Sequence)
               else
                 if public
-                  present_ok(project.sequences.select { |s| s.is_public? }, Sequence, Narra::API::Entities::Sequence)
+                  present_object(project.sequences.select { |s| s.is_public? }, Sequence, Narra::API::Entities::Sequence)
                 else
                   error_not_authorized!
                 end
@@ -72,9 +72,9 @@ module Narra
               # prepare sequence hash
               sequence = {sequence_type: params[:type].to_sym, sequence_name: params[:title], sequence_content: content, sequence_fps: params[:fps], metadata: params[:metadata]}
               # add sequence
-              Narra::Core.add_sequence(project, current_user, sequence)
+              sequence = Narra::Core.add_sequence(project, current_user, sequence)
               # present
-              present_ok
+              present_object(:sequence, sequence, Narra::API::Entities::Sequence)
             end
           end
 

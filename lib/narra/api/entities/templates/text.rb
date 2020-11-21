@@ -22,23 +22,13 @@
 module Narra
   module API
     module Entities
-      module Thumbnails
+      module Templates
+        module Text
 
-        include Narra::API::Helpers::Thumbnails
-
-        def self.included(base)
-          base.class_eval do
-            expose :thumbnails do |model, options|
-              # setup thumbnail count
-              count = options[:type].to_s.include?('detail') || options[:type].to_s.include?('thumbnails') ? Narra::Tools::Settings.thumbnail_count.to_i : Narra::Tools::Settings.thumbnail_count_preview.to_i
-              # resolve
-              if !model.url_thumbnails.nil? && !model.url_thumbnails.empty?
-                model.url_thumbnails.sample(count)
-              else
-                # grab as much as possible
-                thumbnails = model.models.sample(count).collect { |item| thumbnail(item.type) }
-                # refill
-                Array.new(count) { |i| thumbnails[i] || thumbnails.last || thumbnail_empty }
+          def self.included(base)
+            base.class_eval do
+              with_options if: lambda { |model| model.type == :text } do
+                expose :preview
               end
             end
           end

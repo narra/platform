@@ -19,6 +19,15 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:concurrency: 2
-:queues:
-  - purge
+module Narra
+  module API
+    module Entities
+      class Proxy < Grape::Entity
+
+        expose :name, :type, :source_url, :download_url, :connector, :options
+
+        include Narra::API::Entities::Templates::Thumbnails
+      end
+    end
+  end
+end

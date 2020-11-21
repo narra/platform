@@ -19,6 +19,13 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:concurrency: 2
-:queues:
-  - synthesizers
+module Narra
+  module API
+    module Entities
+      class Connector < Grape::Entity
+
+        expose :identifier, :title, :description, :priority
+      end
+    end
+  end
+end

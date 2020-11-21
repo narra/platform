@@ -19,6 +19,23 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:concurrency: 2
-:queues:
-  - transcodes
+module Narra
+  module API
+    module Entities
+      module Templates
+        module Audio
+
+          def self.included(base)
+            base.class_eval do
+              with_options if: lambda { |model| model.type == :audio } do
+                expose :audio_proxy, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.prepared? } do |model, options|
+                  model.audio.url
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end

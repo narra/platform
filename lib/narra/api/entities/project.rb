@@ -35,7 +35,8 @@ module Narra
           model.is_public?
         end
 
-        include Narra::API::Entities::Thumbnails
+        #expose :thumbnails
+        include Narra::API::Entities::Templates::Thumbnails
 
         expose :contributors do |model, options|
           model.contributors.collect { |user| {username: user.username, name: user.name} }

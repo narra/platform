@@ -19,28 +19,10 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-require 'narra/api/entities/templates'
-
-require 'narra/api/entities/connector'
-require 'narra/api/entities/event'
-require 'narra/api/entities/error'
-require 'narra/api/entities/meta_item'
-require 'narra/api/entities/item'
-require 'narra/api/entities/proxy'
-require 'narra/api/entities/junction'
-require 'narra/api/entities/meta'
-require 'narra/api/entities/scenario'
-require 'narra/api/entities/library'
-require 'narra/api/entities/mark_meta'
-require 'narra/api/entities/mark_sequence'
-require 'narra/api/entities/project'
-require 'narra/api/entities/sequence'
-require 'narra/api/entities/user'
-
-module Narra
-  module API
-    module Entities
-
-    end
-  end
-end
+:concurrency: 2
+:queues:
+  - transcodes
+  - generators
+  - synthesizers
+  - sequences
+  - purge

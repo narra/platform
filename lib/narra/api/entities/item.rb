@@ -19,6 +19,8 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
+include ActionView::Helpers::TextHelper
+
 module Narra
   module API
     module Entities
@@ -30,20 +32,8 @@ module Narra
 
         expose :name, :url, :type
 
-        expose :prepared do |model, options|
-          model.prepared?
-        end
-
-        expose :master, if: lambda { |model, options| model.master? } do |item|
-          item.master?
-        end
-
-        expose :sequence, if: lambda { |model, options| options[:type] == :detail_item && model.master? } do |item|
-          { id: item.sequence._id.to_s, name: item.sequence.name }
-        end
-
-        expose :purged, if: lambda { |model, options| model.library.purged } do |item|
-          item.library.purged
+        expose :pending, unless: lambda { |model| model.prepared? } do |model|
+          true
         end
 
         expose :library, format_with: :library, if: {type: :detail_item}
@@ -57,45 +47,18 @@ module Narra
           }
         end
 
-        expose :keywords, if: lambda { |model, options| !model.get_meta(name: 'keywords').nil? } do |item|
-          # keywords
-          metadata = item.get_meta(name: 'keywords')
-          # return the right one
-          value = metadata.respond_to?('each') ? metadata.first.value : metadata.value
-          # get values and return first 5
-          value.split(',').first(5).join(', ')
-        end
+        include Narra::API::Entities::Templates::Thumbnails
+        include Narra::API::Entities::Templates::Text
+        include Narra::API::Entities::Templates::Audio
+        include Narra::API::Entities::Templates::Video
+        include Narra::API::Entities::Templates::Image
 
-        include Narra::API::Entities::Thumbnails
 
-        expose :video_proxy_hq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :video && model.prepared? } do |model, options|
-          model.video.url
-        end
-
-        expose :video_proxy_lq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :video && model.prepared? } do |model, options|
-          model.video.lq.url
-        end
-
-        expose :image_proxy_hq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :image && model.prepared? } do |model, options|
-          model.image.url
-        end
-
-        expose :image_proxy_lq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :image && model.prepared? } do |model, options|
-          model.image.lq.url
-        end
-
-        expose :audio_proxy, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && (model.type == :audio || model.type == :video) && model.prepared? } do |model, options|
-          case model.type
-            when :video
-              model.video.audio.url
-            when :audio
-              model.audio.url
-          end
-        end
-
-        expose :meta, as: :metadata, using: Narra::API::Entities::MetaItem, if: lambda { |model, options| options[:type] == :detail_item || options[:type] == :public_item } do |model, options|
+        expose :meta, as: :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options|  ([:detail_item, :public_item].include?(options[:type]) || !options[:generators].nil?) } do |model, options|
           if options[:type] == :public_item
-            model.meta.select { |meta| meta.public }
+            model.meta.where(public: true)
+          elsif options[:generators].respond_to?(:each)
+            model.meta.where(public: true, generator: { '$in': options[:generators] })
           else
             model.meta
           end

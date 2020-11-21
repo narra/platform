@@ -40,7 +40,7 @@ module Narra
             # get authorized
             error_not_authorized! unless authorize([:author]).size > 0
             # present
-            present_ok_generic(:connectors, present(Narra::Core.connectors))
+            present_object_generic_options(:connectors, Narra::Core.connectors, { with: Narra::API::Entities::Connector })
           end
         end
       end

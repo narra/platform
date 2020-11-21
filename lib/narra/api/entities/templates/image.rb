@@ -19,28 +19,27 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-require 'narra/api/entities/templates'
-
-require 'narra/api/entities/connector'
-require 'narra/api/entities/event'
-require 'narra/api/entities/error'
-require 'narra/api/entities/meta_item'
-require 'narra/api/entities/item'
-require 'narra/api/entities/proxy'
-require 'narra/api/entities/junction'
-require 'narra/api/entities/meta'
-require 'narra/api/entities/scenario'
-require 'narra/api/entities/library'
-require 'narra/api/entities/mark_meta'
-require 'narra/api/entities/mark_sequence'
-require 'narra/api/entities/project'
-require 'narra/api/entities/sequence'
-require 'narra/api/entities/user'
-
 module Narra
   module API
     module Entities
+      module Templates
+        module Image
 
+          def self.included(base)
+            base.class_eval do
+              with_options if: lambda { |model| model.type == :image } do
+                expose :image_proxy_hq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :image && model.prepared? } do |model, options|
+                  model.image.url
+                end
+
+                expose :image_proxy_lq, if: lambda { |model, options| (options[:type] == :detail_item || options[:type] == :public_item) && model.type == :image && model.prepared? } do |model, options|
+                  model.image.lq.url
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 end

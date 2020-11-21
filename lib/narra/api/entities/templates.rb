@@ -19,6 +19,18 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:concurrency: 2
-:queues:
-  - sequences
+require 'narra/api/entities/templates/audio'
+require 'narra/api/entities/templates/image'
+require 'narra/api/entities/templates/text'
+require 'narra/api/entities/templates/thumbnails'
+require 'narra/api/entities/templates/video'
+
+module Narra
+  module API
+    module Entities
+      module Templates
+
+      end
+    end
+  end
+end

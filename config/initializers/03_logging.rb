@@ -19,10 +19,6 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-# Mongoid logging setup
-Mongoid.logger.level = Logger::ERROR
-Mongo::Logger.logger.level = Logger::ERROR
-
 if Rails.env.development?
   # Narra logging setup
   Narra::Tools::Logger.default_logger.level = Logger::DEBUG

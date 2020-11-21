@@ -41,7 +41,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
-              present_ok(project.junctions.where(synthesizer: params[:synthesizer].to_sym).limit(params[:limit]), Junction, Narra::API::Entities::Junction)
+              present_object(project.junctions.where(synthesizer: params[:synthesizer].to_sym).limit(params[:limit]), Junction, Narra::API::Entities::Junction)
             end
           end
 
@@ -51,7 +51,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
-              present_ok(project.junctions.where(synthesizer: params[:synthesizer].to_sym).collect { |junction| junction.items}.flatten, Item, Narra::API::Entities::Item)
+              present_object(project.junctions.where(synthesizer: params[:synthesizer].to_sym).collect { |junction| junction.items}.flatten, Item, Narra::API::Entities::Item)
             end
           end
         end

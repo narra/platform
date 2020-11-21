@@ -20,6 +20,7 @@
 #
 
 require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
 require 'narra/api'
 require 'narra/version'
 require 'narra/modules'

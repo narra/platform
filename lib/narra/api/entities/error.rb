@@ -19,6 +19,14 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:concurrency: 2
-:queues:
-  - generators
+module Narra
+  module API
+    module Entities
+      class Error < Grape::Entity
+
+        expose :message
+        expose :trace
+      end
+    end
+  end
+end

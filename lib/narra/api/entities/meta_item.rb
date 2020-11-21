@@ -26,15 +26,23 @@ module Narra
     module Entities
       class MetaItem < Grape::Entity
 
-        expose :name, :value, :generator, :public
+        expose :name, :value, :generator
+
+        expose :public, unless: :public_item
+
+        expose :in, if: lambda { |model| !model.input.nil? } do |model|
+          model.input
+        end
+
+        expose :out, if: lambda { |model| !model.output.nil? } do |model|
+          model.output
+        end
 
         expose :author, if: lambda { |model, options| !model.author.nil? } do |model, options|
           { username: model.author.username, name: model.author.name }
         end
 
         expose :updated_at
-
-        expose :marks, using: Narra::API::Entities::MarkMeta, if: lambda { |model, options| !model.marks.empty? }
       end
     end
   end

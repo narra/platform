@@ -41,11 +41,11 @@ module Narra
             authenticate!
             # prepare ingest object and upload
             ingest = Narra::Ingest.new
-            ingest.user = current_user
+            ingest.name = params[:file][:filename]
             ingest.file = params[:file][:tempfile]
-            ingest.save
+            ingest.save!
             # return
-            present_ok_generic(:ingest, {url: ingest.file.url})
+            present_object_generic(:ingest, {url: ingest.file.url })
           end
         end
       end

@@ -24,23 +24,19 @@ module Narra
     module Helpers
       module Present
 
-        def present_ok(object = nil, model = nil, entity = nil, type = '', options = {})
-          if model.nil?
-            present({:status => 'OK'})
-          else
-            # prepare key
-            key = object.respond_to?(:each) ? Narra::Extensions::Class.class_name_to_s(model).pluralize.to_sym : Narra::Extensions::Class.class_name_to_sym(model)
-            # present
-            present({:status => 'OK', key => present(object, options.merge({with: entity, type: (type + '_' + Narra::Extensions::Class.class_name_to_s(model)).to_sym}))})
-          end
+        def present_object(object, model, entity = nil, type = '', options = {}, errors = [])
+          # prepare key
+          key = object.respond_to?(:each) ? Narra::Extensions::Class.class_name_to_s(model).pluralize.to_sym : Narra::Extensions::Class.class_name_to_sym(model)
+          # present
+          present_object_generic(key, present(object, options.merge({with: entity, type: (type + '_' + Narra::Extensions::Class.class_name_to_s(model)).to_sym})), errors)
         end
 
-        def present_ok_generic(key, object)
-          present({:status => 'OK', key => object})
+        def present_object_generic(key, object, errors = [])
+          present(key => object, :errors => errors)
         end
 
-        def present_ok_generic_options(key, object, options)
-          present({:status => 'OK', key => present(object, options)})
+        def present_object_generic_options(key, object, options, errors = [])
+          present(key => present(object, options), :errors => errors)
         end
       end
     end

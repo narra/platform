@@ -40,7 +40,7 @@ module Narra
             # get authorized
             error_not_authorized! unless authorize([:author]).size > 0
             # present
-            present_ok_generic(:generators, present(Narra::Core.generators))
+            present_object_generic(:generators, present(Narra::Core.generators))
           end
         end
       end

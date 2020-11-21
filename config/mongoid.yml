@@ -25,7 +25,11 @@ development:
       database: narra_dev
       hosts:
         - mongo:27017
+      options:
+        max_pool_size: 10
   options:
+    background_indexing: true
+    belongs_to_required_by_default: false
     preload_models: true
     raise_not_found_error: false
 
@@ -35,7 +39,11 @@ production:
       database: narra
       hosts:
         - mongo:27017
+      options:
+        max_pool_size: 10
   options:
+    background_indexing: true
+    belongs_to_required_by_default: false
     preload_models: true
     raise_not_found_error: false
 
