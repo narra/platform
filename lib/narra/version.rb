@@ -20,5 +20,5 @@
 #
 
 module Narra
-  VERSION = "dev"
+  VERSION = "0.0.1"
 end

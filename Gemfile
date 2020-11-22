@@ -35,6 +35,7 @@ gem 'rack-cors'
 gem 'tzinfo-data'
 gem 'jwt'
 gem 'bson', '~> 4.5.0'
+#gem 'narra-core', :path => "../platform-core"
 gem 'narra-core', :git => 'https://github.com/narra/platform-core.git'
 gem 'rspec-rails', :group => [:test, :development]
 gem 'rspec-mocks', :group => [:test, :development]
