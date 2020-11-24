@@ -35,13 +35,12 @@ gem 'rack-cors'
 gem 'tzinfo-data'
 gem 'jwt'
 gem 'bson', '~> 4.5.0'
-#gem 'narra-core', :path => "../platform-core"
 gem 'narra-core', :git => 'https://github.com/narra/platform-core.git'
 gem 'rspec-rails', :group => [:test, :development]
 gem 'rspec-mocks', :group => [:test, :development]
 gem 'ruby-debug-ide', :group => :development
+gem 'debase', '~> 0.2.1', :group => :development
 gem 'thin', :group => :development
-gem 'debase', :group => :development
 gem 'mongoid-rspec', :group => :test
 gem 'factory_bot_rails', :group => :test
 gem 'simplecov', :group => :test
