@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: 670fca803e557e2e4b924dbd11f0b69a4f090e8b
+  revision: 475f48b745fc379851f45102d5b0d4b22d61308f
   specs:
-    narra-core (0.1.3)
+    narra-core (0.1.4)
       aasm
       activesupport
       carrierwave-mongoid
