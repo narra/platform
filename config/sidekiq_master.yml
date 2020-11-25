@@ -19,7 +19,6 @@
 # Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
 #
 
-:dynamic: true
 :concurrency: 2
 :queues:
   - schedulers

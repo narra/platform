@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: 475f48b745fc379851f45102d5b0d4b22d61308f
+  revision: 4f887fb086a5b67d1278ee493185c14d9aa45eb4
   specs:
-    narra-core (0.1.4)
+    narra-core (0.1.5)
       aasm
       activesupport
       carrierwave-mongoid
@@ -154,7 +154,7 @@ GEM
       fog-core
       nokogiri (>= 1.5.11, < 2.0.0)
     formatador (0.2.5)
-    fugit (1.4.0)
+    fugit (1.4.1)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     globalid (0.4.2)
