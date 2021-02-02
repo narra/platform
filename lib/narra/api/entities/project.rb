@@ -43,7 +43,9 @@ module Narra
         end
         expose :libraries, using: Narra::API::Entities::Library, :if => {:type => :detail_project}
 
-        expose :meta, as: :metadata, using: Narra::API::Entities::Meta, if: {type: :detail_project}
+        expose :metadata, using: Narra::API::Entities::Meta, if: {type: :detail_project} do |model|
+          model.meta.select { |meta| !meta.hidden }
+        end
       end
     end
   end

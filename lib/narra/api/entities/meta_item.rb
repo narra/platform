@@ -37,12 +37,6 @@ module Narra
         expose :out, if: lambda { |model| !model.output.nil? } do |model|
           model.output
         end
-
-        expose :author, if: lambda { |model, options| !model.author.nil? } do |model, options|
-          { username: model.author.username, name: model.author.name }
-        end
-
-        expose :updated_at
       end
     end
   end

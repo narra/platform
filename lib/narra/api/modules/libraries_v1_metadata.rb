@@ -41,32 +41,30 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
               # present
-              present_object_generic_options(:metadata, library.meta, {with: Narra::API::Entities::Meta, type: 'library'})
+              present_object_generic_options(:metadata, library.meta.select { |meta| !meta.hidden }, {with: Narra::API::Entities::Meta, type: 'library'})
             end
           end
 
           desc 'Create a new metadata for a specific library.'
           post ':id/metadata/new' do
-            required_attributes! [:meta, :value]
+            required_attributes! [:name, :value]
             return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
-              # check the author field
-              author = params[:author].nil? ? current_user : Narra::User.find_by(username: params[:author])
               # add metadata
-              meta = library.add_meta(name: params[:meta], value: params[:value], author: author)
+              meta = library.add_meta(name: params[:name], value: params[:value])
               # present
               present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta, type: 'library'})
             end
           end
 
           desc 'Return a specific metadata for a specific library.'
-          get ':id/metadata/:meta' do
+          get ':id/metadata/:name' do
             return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
               # get meta
-              meta = library.get_meta(name: params[:meta])
+              meta = library.get_meta(name: params[:name])
               # check existence
               error_not_found! if meta.nil?
               # otherwise present
@@ -75,31 +73,29 @@ module Narra
           end
 
           desc 'Delete a specific metadata in a specific library.'
-          get ':id/metadata/:meta/delete' do
+          get ':id/metadata/:name/delete' do
             return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
               # get meta
-              meta = library.get_meta(name: params[:meta])
+              meta = library.get_meta(name: params[:name])
               # check existence
               error_not_found! if meta.nil?
               # destroy
               meta.destroy
               # present
-              present_object(:id, params[:id])
+              present_object_generic(:id, params[:id])
             end
           end
 
           desc 'Update a specific metadata for a specific library.'
-          post ':id/metadata/:meta/update' do
+          post ':id/metadata/:name/update' do
             required_attributes! [:value]
             return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
-              # check the author field
-              author = params[:author].nil? ? current_user : Narra::User.find_by(username: params[:author])
               # update metadata
-              meta = library.update_meta(name: params[:meta], value: params[:value], author: author)
+              meta = library.update_meta(name: params[:name], value: params[:value])
               # present
               present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta, type: 'library'})
             end

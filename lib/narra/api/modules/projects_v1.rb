@@ -67,9 +67,12 @@ module Narra
             # get scenario
             scenario = Narra::Scenario.find(params[:scenario][:id])
             # prepare params
-            parameters = {name: params[:name], title: params[:title], description: params[:description], author: author, contributors: contributors, scenario: scenario}
+            parameters = {name: params[:name], title: params[:title], author: author, contributors: contributors, scenario: scenario}
             # create new project
-            new_one(Project, Narra::API::Entities::Project, true, [:author], parameters)
+            new_one(Project, Narra::API::Entities::Project, true, [:author], parameters) do |project|
+              # save description as it's stored as meta field
+              project.description = params[:description]
+            end
           end
 
           desc 'Delete a specific project.'

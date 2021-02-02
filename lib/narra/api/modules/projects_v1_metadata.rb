@@ -36,37 +36,35 @@ module Narra
         resource :projects do
 
           desc 'Return all metadata for a specific project.'
-          get ':name/metadata' do
-            return_one_custom(Project, :name, true, [:author]) do |project, roles, public|
+          get ':project/metadata' do
+            return_one_custom(Project, :project, true, [:author], :name) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
               # present
-              present_object_generic_options('metadata', project.meta, {with: Narra::API::Entities::Meta, type: 'project'})
+              present_object_generic_options('metadata', project.meta.select { |meta| !meta.hidden }, {with: Narra::API::Entities::Meta, type: 'project'})
             end
           end
 
           desc 'Create a new metadata for a specific project.'
-          post ':name/metadata/new' do
-            required_attributes! [:meta, :value]
-            return_one_custom(Project, :name, true, [:author]) do |project, roles, public|
+          post ':project/metadata/new' do
+            required_attributes! [:name, :value]
+            return_one_custom(Project, :project, true, [:author], :name) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
-              # check the author field
-              author = params[:author].nil? ? current_user : Narra::User.find_by(username: params[:author])
               # add metadata
-              meta = project.add_meta(name: params[:meta], value: params[:value], author: author)
+              meta = project.add_meta(name: params[:name], value: params[:value])
               # present
               present_object_generic_options('metadata', meta, {with: Narra::API::Entities::Meta, type: 'project'})
             end
           end
 
           desc 'Return a specific metadata for a specific project.'
-          get ':name/metadata/:meta' do
-            return_one_custom(Project, :name, true, [:author]) do |project, roles, public|
+          get ':project/metadata/:name' do
+            return_one_custom(Project, :project, true, [:author], :name) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
               # get meta
-              meta = project.get_meta(name: params[:meta])
+              meta = project.get_meta(name: params[:name])
               # check existence
               error_not_found! if meta.nil?
               # otherwise present
@@ -75,31 +73,29 @@ module Narra
           end
 
           desc 'Delete a specific metadata in a specific project.'
-          get ':name/metadata/:meta/delete' do
-            return_one_custom(Project, :name, true, [:author]) do |project, roles, public|
+          get ':project/metadata/:name/delete' do
+            return_one_custom(Project, :project, true, [:author], :name) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
               # get meta
-              meta = project.get_meta(name: params[:meta])
+              meta = project.get_meta(name: params[:name])
               # check existence
               error_not_found! if meta.nil?
               # destroy
               meta.destroy
               # present
-              present_object(:name, params[:name])
+              present_object_generic(:name, params[:name])
             end
           end
 
           desc 'Update a specific metadata for a specific project.'
-          post ':name/metadata/:meta/update' do
+          post ':project/metadata/:name/update' do
             required_attributes! [:value]
-            return_one_custom(Project, :name, true, [:author]) do |project, roles, public|
+            return_one_custom(Project, :project, true, [:author], :name) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
-              # check the author field
-              author = params[:author].nil? ? current_user : Narra::User.find_by(username: params[:author])
               # update metadata
-              meta = project.update_meta(name: params[:meta], value: params[:value], author: author)
+              meta = project.update_meta(name: params[:name], value: params[:value])
               # present
               present_object_generic_options('metadata', meta, {with: Narra::API::Entities::Meta, type: 'project'})
             end

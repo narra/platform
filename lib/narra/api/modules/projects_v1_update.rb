@@ -44,9 +44,9 @@ module Narra
               # change name if there is a change
               project.update_attributes(name: params[:new_name]) unless params[:new_name].nil? || project.name.equal?(params[:new_name])
               project.update_attributes(title: params[:title]) unless params[:title].nil? || project.title.equal?(params[:title])
-              project.update_attributes(description: params[:description]) unless params[:description].nil? || project.description.equal?(params[:description])
               project.update_attributes(author: User.find_by(username: params[:author][:username])) unless params[:author].nil? || project.author.username.equal?(params[:author][:username])
               project.update_attributes(scenario: Scenario.find(params[:scenario][:id])) unless params[:scenario].nil? || project.scenario._id.equal?(params[:scenario][:id])
+              project.description = params[:description] unless params[:description].nil? || project.description.equal?(params[:description])
               project.public = params[:public] unless params[:public].nil?
               # update contributors if exist
               update_array(project.contributors, params[:contributors].collect { |c| User.find_by(username: c[:username]) }) unless params[:contributors].nil?

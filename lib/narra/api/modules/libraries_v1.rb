@@ -66,9 +66,11 @@ module Narra
             # get scenario
             scenario = Narra::Scenario.find(params[:scenario][:id])
             # prepare params
-            parameters = {name: params[:name], description: params[:description], author: author, contributors: contributors, scenario: scenario}
+            parameters = {name: params[:name], author: author, contributors: contributors, scenario: scenario}
             # create library
             new_one(Library, Narra::API::Entities::Library, true, [:author], parameters) do |library|
+              # save description as it's stored as meta field
+              library.description = params[:description]
               # check for the project if any
               project = Project.find_by(name: params[:project]) unless params[:project].nil?
               # authorize the owner

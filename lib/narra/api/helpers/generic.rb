@@ -51,8 +51,8 @@ module Narra
         end
 
         # Generic method for returning of the specific object based on the owner
-        def return_one(model, entity, key, authentication, authorization = [], options = {})
-          return_one_custom(model, key, authentication, authorization) do |object, roles, public|
+        def return_one(model, entity, param, authentication, authorization = [], options = {}, key = param)
+          return_one_custom(model, param, authentication, authorization, key) do |object, roles, public|
             # resolve
             if (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0 || public
               present_object(object, model, entity, 'detail', options)
@@ -62,10 +62,10 @@ module Narra
           end
         end
 
-        def return_one_custom(model, key, authentication, authorization = [])
+        def return_one_custom(model, param, authentication, authorization = [], key = param)
           authenticate! if authentication
           # get object
-          object = model.find_by(key => params[key])
+          object = model.find_by(key => params[param])
           # present or not found
           if object.nil?
             error_not_found!
@@ -114,8 +114,8 @@ module Narra
           end
         end
 
-        def update_one(model, entity, key, authentication, authorization = [])
-          return_one_custom(model, key, authentication, authorization) do |object, roles, public|
+        def update_one(model, entity, param, authentication, authorization = [], key = param)
+          return_one_custom(model, param, authentication, authorization, key) do |object, roles, public|
             # authorization
             error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
             # update custom code
@@ -130,8 +130,8 @@ module Narra
         end
 
         # Generic method for deleting of the specific object based on the owner
-        def delete_one(model, key, authentication, authorization = [])
-          return_one_custom(model, key, authentication, authorization) do |object, roles, public|
+        def delete_one(model, param, authentication, authorization = [], key = param)
+          return_one_custom(model, param, authentication, authorization, key) do |object, roles, public|
             # authorization
             error_not_authorized! unless (roles & [:admin, :author]).size > 0
             # update custom code
@@ -139,7 +139,7 @@ module Narra
             # save
             object.destroy
             # present
-            present_object(key, params[key])
+            present_object_generic(key, params[param])
           end
         end
 
