@@ -41,9 +41,11 @@ module Narra
                 # else
                 #   [thumbnail(model)]
                 # end
-                #
+
+                # resolve type
+                type = defined?(model.type) ? model.type : (model[:type].nil? ? :empty : model[:type])
                 # return template image for concrete type
-                [empty_thumbnail_url(model.class.name.split('::').last.downcase)]
+                [empty_thumbnail_url(type.to_s)]
               end
             end
           end
