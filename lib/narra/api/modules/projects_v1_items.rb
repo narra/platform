@@ -36,22 +36,26 @@ module Narra
         resource :projects do
 
           desc 'Return project items.'
-          get ':name/items' do
-            return_one_custom(Project, :name, false, [:author]) do |project, roles, public|
+          get ':id/items' do
+            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
+              # resolve libraries selection
+              libraries = params[:libraries] ? params[:libraries] : project.library_ids
+              # query
+              items = Narra::Item.libraries(libraries).asc(:name)
               # present
-              present_object(project.items.asc(:name), Item, Narra::API::Entities::Item, '', {generators: params[:generators]})
+              present_object(items, Item, Narra::API::Entities::Item, public ? ['public'] : [], {generators: params[:generators]})
             end
           end
 
           desc 'Return project item.'
-          get ':name/items/:id' do
-            return_one_custom(Project, :name, false, [:author]) do |project, roles, public|
+          get ':id/items/:item' do
+            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
-              present_object(project.items.find(params[:id]), Item, Narra::API::Entities::Item, 'public')
+              present_object(project.items.find(params[:item]), Item, Narra::API::Entities::Item, public ? ['public'] : [])
             end
           end
         end

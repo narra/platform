@@ -24,7 +24,11 @@ module Narra
     module Entities
       class Meta < Grape::Entity
 
-        expose :name, :value, :public
+        include Narra::API::Helpers::Filter
+
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :value, unless: lambda { |model| filter?('value') }
+        expose :public, unless: lambda { |model, options| filter?('public') or (!options[:types].nil? and !(options[:types] & [:public_project, :public_library]).empty?) }
       end
     end
   end

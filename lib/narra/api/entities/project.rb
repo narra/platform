@@ -24,26 +24,30 @@ module Narra
     module Entities
       class Project < Grape::Entity
 
-        expose :name, :title, :description
-        expose :author do |model, options|
+        include Narra::API::Helpers::Filter
+
+        expose :id, unless: lambda { |model| filter?('id') }
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :description, unless: lambda { |model| filter?('description') }
+
+        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
           { username: model.author.username, name: model.author.name }
         end
 
-        expose :scenario, using: Narra::API::Entities::Scenario, :if => {:type => :detail_project}
+        expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model, options| filter?('scenario', [:detail_project]) }
 
-        expose :public do |model, options|
+        expose :public, unless: lambda { |model, options| filter?('public', [:public_item]) } do |model|
           model.is_public?
         end
 
-        #expose :thumbnails
         include Narra::API::Entities::Templates::Thumbnails
 
-        expose :contributors do |model, options|
+        expose :contributors, unless: lambda { |model| filter?('contributors') } do |model, options|
           model.contributors.collect { |user| {username: user.username, name: user.name} }
         end
-        expose :libraries, using: Narra::API::Entities::Library, :if => {:type => :detail_project}
+        expose :libraries, using: Narra::API::Entities::Library, unless: lambda { |model| filter?('libraries', [:detail_project]) }
 
-        expose :metadata, using: Narra::API::Entities::Meta, if: {type: :detail_project} do |model|
+        expose :metadata, using: Narra::API::Entities::Meta, unless: lambda { |model| filter?('metadata', [:detail_project]) } do |model|
           model.meta.select { |meta| !meta.hidden }
         end
       end

@@ -26,32 +26,30 @@ module Narra
         module Thumbnails
 
           include Narra::API::Helpers::Thumbnails
+          include Narra::API::Helpers::Filter
 
           def self.included(base)
             base.class_eval do
-              expose :thumbnails do |model, options|
+              expose :thumbnails, unless: lambda { |model| filter?('thumbnails') } do |model, options|
+                # TODO settings needs to be optimized
                 # setup thumbnail count
-                #count = options[:type].to_s.include?('detail') || options[:type].to_s.include?('thumbnails') ? @@thumbnail_count ||= Narra::Tools::Settings.thumbnail_count.to_i : @@thumbnail_count_preview ||= Narra::Tools::Settings.thumbnail_count_preview.to_i
-                #count = 5
+                # count = options[:type].to_s.include?('detail') || options[:type].to_s.include?('thumbnails') ? @@thumbnail_count ||= Narra::Tools::Settings.thumbnail_count.to_i : @@thumbnail_count_preview ||= Narra::Tools::Settings.thumbnail_count_preview.to_i
+                # count = 5
                 # prepare
                 # if model.respond_to?(:thumbnails) and !model.thumbnails.empty?
                 #   model.thumbnails
                 # else
                 #   [thumbnail(model)]
                 # end
-                if options[:type].to_s.include?('detail')
-                  [
-                      "http://#{options[:env]['HTTP_HOST']}/images/empty.png",
-                      "http://#{options[:env]['HTTP_HOST']}/images/empty.png",
-                      "http://#{options[:env]['HTTP_HOST']}/images/empty.png",
-                      "http://#{options[:env]['HTTP_HOST']}/images/empty.png",
-                      "http://#{options[:env]['HTTP_HOST']}/images/empty.png"
-                  ]
-                else
-                  ["http://#{options[:env]['HTTP_HOST']}/images/empty.png"]
-                end
+                #
+                # return template image for concrete type
+                [empty_thumbnail_url(model.class.name.split('::').last.downcase)]
               end
             end
+          end
+
+          def empty_thumbnail_url(type)
+            "http://#{options[:env]['HTTP_HOST']}/images/#{type}.png"
           end
         end
       end

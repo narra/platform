@@ -67,16 +67,20 @@ module Narra
                 # check for generators
                 generators = params[:generators].nil? ? [] : params[:generators].select {|g| !Narra::Core.generator(g[:identifier].to_sym).nil?}
                 # prepare params
-                parameters = {name: params[:name], type: ScenarioLibrary, description: params[:description], author: author, generators: generators}
+                parameters = {type: ScenarioLibrary, author: author, generators: generators}
               when :project
                 # check for synthesizers
                 synthesizers = params[:synthesizers].nil? ? [] : params[:synthesizers].select {|s| !Narra::Core.synthesizer(s[:identifier].to_sym).nil?}
-                parameters = {name: params[:name], type: ScenarioProject, description: params[:description], author: author, synthesizers: synthesizers}
+                parameters = {type: ScenarioProject, author: author, synthesizers: synthesizers}
               else
                 error_parameter_missing!(:type)
             end
             # create Scenario
-            new_one(Scenario, Narra::API::Entities::Scenario, true, [:author], parameters)
+            new_one(Scenario, Narra::API::Entities::Scenario, true, [:author], parameters) do |scenario|
+              # update name and description
+              scenario.name = params[:name]
+              scenario.description = params[:description]
+            end
           end
 
           desc 'Delete a specific library.'

@@ -37,7 +37,7 @@ module Narra
 
           desc 'Return all projects.'
           get do
-            return_many(Project, Narra::API::Entities::Project, false, [:author], 'thumbnails')
+            return_many(Project, Narra::API::Entities::Project, false, [:author])
           end
 
           desc 'Validation if a specific project exists.'
@@ -46,20 +46,20 @@ module Narra
             # prepare
             validation = false
             # check if there is a project by the name or title
-            validation = true if params[:name] && Narra::Project.where(name: params[:name]).count == 0
-            validation = true if params[:title] && Narra::Project.where(title: params[:title]).count == 0
+            validation = true if params[:id] && Narra::Project.where(id: params[:id]).count == 0
+            #validation = true if params[:title] && Narra::Project.where(title: params[:title]).count == 0
             # if the project exists return ok
             present_object_generic(:validation, validation)
           end
 
           desc 'Return a specific project.'
-          get ':name' do
-            return_one(Project, Narra::API::Entities::Project, :name, false, [:author])
+          get ':id' do
+            return_one(Project, Narra::API::Entities::Project, :id, false, [:author])
           end
 
           desc 'Create new project.'
           post 'new' do
-            required_attributes! [:name, :title, :scenario]
+            required_attributes! [:id, :name, :scenario]
             # check for the author
             author = params[:author].nil? ? current_user : User.find_by(username: params[:author][:username])
             # check for contributors
@@ -67,17 +67,18 @@ module Narra
             # get scenario
             scenario = Narra::Scenario.find(params[:scenario][:id])
             # prepare params
-            parameters = {name: params[:name], title: params[:title], author: author, contributors: contributors, scenario: scenario}
+            parameters = {_id: params[:id], author: author, contributors: contributors, scenario: scenario}
             # create new project
             new_one(Project, Narra::API::Entities::Project, true, [:author], parameters) do |project|
-              # save description as it's stored as meta field
-              project.description = params[:description]
+              # save name and description as it's stored as meta field
+              project.name = params[:name] if params[:name]
+              project.description = params[:description] if params[:description]
             end
           end
 
           desc 'Delete a specific project.'
-          get ':name/delete' do
-            delete_one(Project, :name, true, [:author])
+          get ':id/delete' do
+            delete_one(Project, :id, true, [:author])
           end
         end
       end

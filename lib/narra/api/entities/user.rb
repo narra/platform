@@ -24,11 +24,16 @@ module Narra
     module Entities
       class User < Grape::Entity
 
-        expose :username, :name
+        include Narra::API::Helpers::Filter
 
-        expose :email, :image, :roles, if: lambda { |model, options| options[:type] == :admin_user || options[:type] == :detail_user }
+        expose :username, unless: lambda { |model| filter?('username', [:admin_user, :detail_user]) }
+        expose :name, unless: lambda { |model| filter?('name', [:admin_user, :detail_user]) }
 
-        expose :identities, if: lambda { |model, options| options[:type] == :admin_user || options[:type] == :detail_user } do |user, options|
+        expose :email, unless: lambda { |model| filter?('email', [:admin_user, :detail_user]) }
+        expose :image, unless: lambda { |model| filter?('image', [:admin_user, :detail_user]) }
+        expose :roles, unless: lambda { |model| filter?('roles', [:admin_user, :detail_user]) }
+
+        expose :identities, unless: lambda { |model| filter?('identities', [:admin_user, :detail_user]) } do |user, options|
           user.identities.collect { |identity| {name: identity.provider} }
         end
       end

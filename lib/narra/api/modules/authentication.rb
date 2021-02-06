@@ -77,15 +77,15 @@ module Narra
         end
 
         resource :auth do
-          get '/:provider/callback' do
+          get ':provider/callback' do
             handle_auth_response
           end
 
-          post '/:provider/callback' do
+          post ':provider/callback' do
             handle_auth_response
           end
 
-          get '/providers' do
+          get 'providers' do
             present_object_generic(:providers, Narra::Auth::PROVIDERS.collect {|provider| {name: provider} })
           end
         end

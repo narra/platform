@@ -24,37 +24,40 @@ module Narra
     module Entities
       class Library < Grape::Entity
 
-        expose :id do |model, options|
+        include Narra::API::Helpers::Filter
+
+        expose :id, unless: lambda { |model| filter?('id') } do |model, options|
           model._id.to_s
         end
 
-        expose :name, :description
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :description, unless: lambda { |model| filter?('description') }
 
-        expose :author do |model, options|
+        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
           {username: model.author.username, name: model.author.name}
         end
 
-        expose :shared do |model, options|
+        expose :shared, unless: lambda { |model| filter?('shared') } do |model, options|
           model.is_shared?
         end
 
-        expose :purged, if: lambda { |model, options| model.purged }
+        expose :purged, if: lambda { |model| !filter?('purged') and model.purged }
 
         include Narra::API::Entities::Templates::Thumbnails
 
-        expose :contributors do |model, options|
+        expose :contributors, unless: lambda { |model| filter?('contributors') } do |model, options|
           model.contributors.collect { |user| {username: user.username, name: user.name} }
         end
 
-        expose :scenario, using: Narra::API::Entities::Scenario, :if => {:type => :detail_library}
+        expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model| filter?('scenario', [:detail_library]) }
 
-        expose :projects, format_with: :projects, :if => {:type => :detail_library}
+        expose :projects, format_with: :projects, unless: lambda { |model| filter?('projects', [:detail_library]) }
 
         format_with :projects do |projects|
-          projects.collect { |project| {id: project._id.to_s, name: project.name, title: project.title, author: {username: project.author.username, name: project.author.name}} }
+          projects.collect { |project| {id: project.id, name: project.name, author: {username: project.author.username, name: project.author.name}} }
         end
 
-        expose :metadata, using: Narra::API::Entities::Meta, if: {type: :detail_library} do |model|
+        expose :metadata, using: Narra::API::Entities::Meta, unless: lambda { |model| filter?('metadata', [:detail_library]) } do |model|
           model.meta.select { |meta| !meta.hidden }
         end
       end

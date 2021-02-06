@@ -39,13 +39,12 @@ module Narra
         resource :projects do
 
           desc 'Update a specific project.'
-          post ':name/update' do
-            update_one(Project, Narra::API::Entities::Project, :name, true, [:author]) do |project|
+          post ':id/update' do
+            update_one(Project, Narra::API::Entities::Project, :id, true, [:author]) do |project|
               # change name if there is a change
-              project.update_attributes(name: params[:new_name]) unless params[:new_name].nil? || project.name.equal?(params[:new_name])
-              project.update_attributes(title: params[:title]) unless params[:title].nil? || project.title.equal?(params[:title])
               project.update_attributes(author: User.find_by(username: params[:author][:username])) unless params[:author].nil? || project.author.username.equal?(params[:author][:username])
               project.update_attributes(scenario: Scenario.find(params[:scenario][:id])) unless params[:scenario].nil? || project.scenario._id.equal?(params[:scenario][:id])
+              project.name = params[:name] unless params[:name].nil? || project.name.equal?(params[:name])
               project.description = params[:description] unless params[:description].nil? || project.description.equal?(params[:description])
               project.public = params[:public] unless params[:public].nil?
               # update contributors if exist

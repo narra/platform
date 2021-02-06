@@ -41,7 +41,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
               # present
-              present_object_generic_options(:metadata, library.meta.select { |meta| !meta.hidden }, {with: Narra::API::Entities::Meta, type: 'library'})
+              present_object_generic_options(:metadata, library.meta.select { |meta| !meta.hidden }, {with: Narra::API::Entities::Meta})
             end
           end
 
@@ -54,7 +54,7 @@ module Narra
               # add metadata
               meta = library.add_meta(name: params[:name], value: params[:value])
               # present
-              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta, type: 'library'})
+              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta})
             end
           end
 
@@ -68,7 +68,7 @@ module Narra
               # check existence
               error_not_found! if meta.nil?
               # otherwise present
-              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta, type: 'library'})
+              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta})
             end
           end
 
@@ -97,7 +97,7 @@ module Narra
               # update metadata
               meta = library.update_meta(name: params[:name], value: params[:value])
               # present
-              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta, type: 'library'})
+              present_object_generic_options(:metadata, meta, {with: Narra::API::Entities::Meta})
             end
           end
         end

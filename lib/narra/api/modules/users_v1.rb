@@ -39,7 +39,7 @@ module Narra
           get do
             authenticate!
             # authorize
-            type = authorize([:admin]).size > 0 ? 'admin' : ''
+            type = authorize([:admin]).size > 0 ? ['admin'] : []
             # present
             present_object(User.all, User, Narra::API::Entities::User, type)
           end
@@ -48,7 +48,7 @@ module Narra
           get 'me' do
             authenticate!
             # present
-            present_object(current_user, User, Narra::API::Entities::User, 'admin')
+            present_object(current_user, User, Narra::API::Entities::User, ['detail'])
           end
 
           desc "Signout logged user in the current session."

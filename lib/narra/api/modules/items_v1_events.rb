@@ -41,7 +41,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0
               # presnet
-              present_object(item.events, Event, Narra::API::Entities::Event, 'item')
+              present_object(item.events, Event, Narra::API::Entities::Event, ['item'])
             end
           end
         end

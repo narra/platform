@@ -1,5 +1,6 @@
+
 #
-# Copyright (C) 2020 narra.eu
+# Copyright (C) 2021 narra.eu
 #
 # This file is part of Narra Platform Core.
 #
@@ -16,24 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with Narra Platform Core. If not, see <http://www.gnu.org/licenses/>.
 #
-# Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
+# Authors: Michal Mocnak <michal@narra.eu>
 #
 
 module Narra
   module API
-    module Entities
-      module Templates
-        module Text
-
-          include Narra::API::Helpers::Filter
-
-          def self.included(base)
-            base.class_eval do
-              with_options if: lambda { |model| model.type == :text } do
-                expose :preview, unless: lambda { |model| filter?('preview') }
-              end
+    module Helpers
+      module Filter
+        def filter?(name, types = [])
+          if (options[:filters] and options[:filters].include?(name))
+            # it's filtered
+            return true
+          else
+            # types not empty so needs to resolve
+            unless types.empty?
+              # filter if not contains selected type
+              return (options[:types] & types).empty?
             end
           end
+          # not filtering at all
+          return false
         end
       end
     end

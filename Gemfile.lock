@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: 29fd7ba9ab85396c216041436d9ae82b6cf4fe30
+  revision: c40988c447f02c59e1e734be11e6c7bc818cddd6
   specs:
-    narra-core (0.1.8)
+    narra-core (0.1.9)
       aasm
       activesupport
       carrierwave-mongoid
@@ -286,7 +286,7 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rake (13.0.3)
     redis (4.2.5)
-    redis-namespace (1.8.0)
+    redis-namespace (1.8.1)
       redis (>= 3.0.4)
     rspec-core (3.10.0)
       rspec-support (~> 3.10.0)

@@ -24,11 +24,11 @@ module Narra
     module Helpers
       module Present
 
-        def present_object(object, model, entity = nil, type = '', options = {}, errors = [])
+        def present_object(object, model, entity = nil, types = [], options = {}, errors = [])
           # prepare key
           key = object.respond_to?(:each) ? Narra::Extensions::Class.class_name_to_s(model).pluralize.to_sym : Narra::Extensions::Class.class_name_to_sym(model)
           # present
-          present_object_generic(key, present(object, options.merge({with: entity, type: (type + '_' + Narra::Extensions::Class.class_name_to_s(model)).to_sym})), errors)
+          present_object_generic(key, present(object, options.merge({with: entity, types: types.collect { |type| (type + '_' + Narra::Extensions::Class.class_name_to_s(model)).to_sym }, filters: params[:filters]})), errors)
         end
 
         def present_object_generic(key, object, errors = [])

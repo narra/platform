@@ -24,7 +24,7 @@ module Narra
     module Entities
       class Connector < Grape::Entity
 
-        expose :identifier, :title, :description, :priority
+        expose :identifier, :name, :description, :priority
       end
     end
   end

@@ -24,25 +24,29 @@ module Narra
     module Entities
       class Scenario < Grape::Entity
 
-        expose :id do |model, options|
+        include Narra::API::Helpers::Filter
+
+        expose :id, unless: lambda { |model| filter?('id') } do |model, options|
           model._id.to_s
         end
 
-        expose :name, :description, :type
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :description, unless: lambda { |model| filter?('description') }
+        expose :type, unless: lambda { |model| filter?('type') }
 
-        expose :author do |model, options|
+        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
           { username: model.author.username, name: model.author.name }
         end
 
-        expose :updated_at
+        expose :updated_at, unless: lambda { |model| filter?('updated_at') }
 
-        expose :shared do |model, options|
+        expose :shared, unless: lambda { |model| filter?('shared') } do |model, options|
           model.is_shared?
         end
 
         include Narra::API::Entities::Templates::Thumbnails
 
-        expose :generators, if: lambda { |model, options| (options[:type] == :detail_scenario) && model.type == :scenariolibrary} do |model, options|
+        expose :generators, unless: lambda { |model| filter?('generators', [:detail_scenario]) or model.type != :scenariolibrary } do |model, options|
           model.generators.collect { |generator|
             {
                 identifier: generator[:identifier],
@@ -53,7 +57,7 @@ module Narra
           }
         end
 
-        expose :synthesizers, if: lambda { |model, options| (options[:type] == :detail_scenario || options[:type] == :detail_library) && model.type == :scenarioproject} do |model, options|
+        expose :synthesizers, unless: lambda { |model, options| filter?('synthesizers', [:detail_scenario, :detail_library]) or model.type != :scenarioproject } do |model, options|
           model.synthesizers.collect { |synthesizer|
             {
                 identifier: synthesizer[:identifier],

@@ -25,7 +25,7 @@ module Narra
       module Generic
 
         # generic method for returning of the specific object based on the owner
-        def return_many(model, entity, authentication, authorization = [], feature = '')
+        def return_many(model, entity, authentication, authorization = [], types = [])
           authenticate! if authentication
           # check for user and authorize
           roles = authorize(authorization)
@@ -46,8 +46,10 @@ module Narra
               error_not_authorized!
             end
           end
+          # resolve types
+          types.push('public') if public
           # present
-          present_object(objects, model, entity, feature)
+          present_object(objects, model, entity, types)
         end
 
         # Generic method for returning of the specific object based on the owner
@@ -55,7 +57,7 @@ module Narra
           return_one_custom(model, param, authentication, authorization, key) do |object, roles, public|
             # resolve
             if (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0 || public
-              present_object(object, model, entity, 'detail', options)
+              present_object(object, model, entity, public ? ['detail', 'public'] : ['detail'], options)
             else
               error_not_authorized!
             end
@@ -108,7 +110,7 @@ module Narra
             # probe
             object.probe if object.is_a? Narra::Tools::Probeable
             # present
-            present_object(object, model, entity, 'detail')
+            present_object(object, model, entity, ['detail'])
           else
             error_unknown!
           end
@@ -125,7 +127,7 @@ module Narra
             # probe
             object.probe if object.is_a? Narra::Tools::Probeable
             # present
-            present_object(object, model, entity, 'detail')
+            present_object(object, model, entity, ['detail'])
           end
         end
 

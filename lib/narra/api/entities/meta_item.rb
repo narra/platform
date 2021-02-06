@@ -26,15 +26,19 @@ module Narra
     module Entities
       class MetaItem < Grape::Entity
 
-        expose :name, :value, :generator
+        include Narra::API::Helpers::Filter
 
-        expose :public, unless: :public_item
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :value, unless: lambda { |model| filter?('value') }
+        expose :generator, unless: lambda { |model| filter?('generator') }
 
-        expose :in, if: lambda { |model| !model.input.nil? } do |model|
+        expose :public, unless: lambda { |model| filter?('public') or (!options[:types].nil? and !(options[:types] & [:public_item]).empty?) }
+
+        expose :in, unless: lambda { |model| filter?('in') or model.input.nil? } do |model|
           model.input
         end
 
-        expose :out, if: lambda { |model| !model.output.nil? } do |model|
+        expose :out, unless: lambda { |model| filter?('out') or model.output.nil? } do |model|
           model.output
         end
       end

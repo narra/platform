@@ -26,24 +26,29 @@ module Narra
     module Entities
       class Item < Grape::Entity
 
-        expose :id do |model, options|
+        include Narra::API::Helpers::Filter
+
+        expose :id, unless: lambda { |model| filter?('id') } do |model, options|
           model._id.to_s
         end
 
-        expose :name, :url, :type
+        expose :name, unless: lambda { |model| filter?('name') }
+
+        expose :url, unless: lambda { |model| filter?('url') }
+        expose :type, unless: lambda { |model| filter?('type') }
 
         expose :pending, unless: lambda { |model| model.prepared? } do |model|
           true
         end
 
-        expose :library, format_with: :library, if: {type: :detail_item}
+        expose :library, format_with: :library, unless: lambda { |model| filter?('library', [:detail_item]) }
 
         format_with :library do |library|
           {
-              id: library._id.to_s,
-              name: library.name,
-              author: { username: library.author.username, name: library.author.name },
-              contributors: library.contributors.collect { |user| {username: user.username, name: user.name} }
+            id: library._id.to_s,
+            name: library.name,
+            author: { username: library.author.username, name: library.author.name },
+            contributors: library.contributors.collect { |user| { username: user.username, name: user.name } }
           }
         end
 
@@ -53,8 +58,7 @@ module Narra
         include Narra::API::Entities::Templates::Video
         include Narra::API::Entities::Templates::Image
 
-
-        expose :meta, as: :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options|  ([:detail_item, :public_item].include?(options[:type]) || !options[:generators].nil?) } do |model, options|
+        expose :meta, as: :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options| !filter?('metadata', [:public_item, :detail_item]) or (!options[:types].nil? and !(options[:types] & [:public_item]).empty? and !options[:generators].nil?) } do |model, options|
           if options[:type] == :public_item
             model.meta.where(public: true)
           elsif options[:generators].respond_to?(:each)

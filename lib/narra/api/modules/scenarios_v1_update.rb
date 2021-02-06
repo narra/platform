@@ -39,10 +39,10 @@ module Narra
           desc 'Update a specific scenario.'
           post ':id/update' do
             update_one(Scenario, Narra::API::Entities::Scenario, :id, true, [:author]) do |scenario|
-              scenario.update_attributes(name: params[:name]) unless params[:name].nil? || scenario.name.equal?(params[:name])
-              scenario.update_attributes(description: params[:description]) unless params[:description].nil? || scenario.description.equal?(params[:description])
               scenario.update_attributes(author: User.find_by(username: params[:author])) unless params[:author].nil? || scenario.author.username.equal?(params[:author])
               scenario.shared = params[:shared] unless params[:shared].nil?
+              scenario.name = params[:name] unless params[:name].nil? || scenario.name.equal?(params[:name])
+              scenario.description = params[:description] unless params[:description].nil? || scenario.description.equal?(params[:description])
               # check for scenario type
               case scenario.type
                 when :scenariolibrary
@@ -59,9 +59,6 @@ module Narra
                     # push them if changed
                     scenario.update_attributes(synthesizers: synthesizers)
                   end
-                  # update layouts and visualizations if exist
-                  scenario.update_attributes(layouts: params[:layouts]) unless params[:layouts].nil?
-                  scenario.update_attributes(visualizations: params[:visualizations]) unless params[:visualizations].nil?
               end
             end
           end
