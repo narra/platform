@@ -24,8 +24,6 @@ module Narra
     module Entities
       class MarkSequence < Grape::Entity
 
-        include Narra::API::Helpers::Thumbnails
-
         expose :row
 
         expose :clip do |model, options|
@@ -33,9 +31,9 @@ module Narra
           item = get_item(model.clip, options)
           # basic clip output
           if item.nil? || !item.prepared?
-            output = {name: model.clip, thumbnail: model.clip == 'black' ? thumbnail({ type: :black }) : thumbnail({ type: :empty })}
+            output = {name: model.clip}
           else
-            output = {id: item._id.to_s, name: model.clip, type: item.type, thumbnail: item.url_thumbnail}
+            output = {id: item._id.to_s, name: model.clip, type: item.type}
           end
           # process
           unless item.nil?
