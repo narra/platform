@@ -42,7 +42,7 @@ module Narra
                 # end
 
                 # resolve type
-                type = defined?(model.type) ? model.type : (model[:type].nil? ? :empty : model[:type])
+                type = defined?(model.type) ? model.type : (model[:type].nil? ? (model.class.name.split('::').last.downcase) : model[:type])
                 # return template image for concrete type
                 [empty_thumbnail_url(type.to_s)]
               end
