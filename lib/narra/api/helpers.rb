@@ -25,7 +25,6 @@ require 'narra/api/helpers/error'
 require 'narra/api/helpers/filter'
 require 'narra/api/helpers/generic'
 require 'narra/api/helpers/present'
-require 'narra/api/helpers/thumbnails'
 require 'narra/api/helpers/user'
 
 module Narra
