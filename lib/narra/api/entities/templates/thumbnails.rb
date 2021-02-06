@@ -25,7 +25,6 @@ module Narra
       module Templates
         module Thumbnails
 
-          include Narra::API::Helpers::Thumbnails
           include Narra::API::Helpers::Filter
 
           def self.included(base)
