@@ -31,7 +31,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   # Google OAuth2 Provider
   if ENV['GOOGLE_CLIENT_ID'] && ENV['GOOGLE_CLIENT_SECRET']
-    provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {:name => 'google'}
+    provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], { :name => 'google' }
     # register
     Narra::Auth::PROVIDERS << 'google'
   end
@@ -41,5 +41,17 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     provider :github, ENV['GITHUB_CLIENT_ID'], ENV['GITHUB_CLIENT_SECRET']
     # register
     Narra::Auth::PROVIDERS << 'github'
+  end
+
+  if ENV['GITLAB_CLIENT_SERVER'] && ENV['GITLAB_CLIENT_ID'] && ENV['GITLAB_CLIENT_SECRET']
+    # Gitlab OAuth2 Provider
+    provider :gitlab, ENV['GITLAB_CLIENT_ID'], ENV['GITLAB_CLIENT_SECRET'],
+             {
+               client_options: {
+                 site: "#{ENV['GITLAB_CLIENT_SERVER']}/api/v4"
+               }
+             }
+    # register
+    Narra::Auth::PROVIDERS << 'gitlab'
   end
 end

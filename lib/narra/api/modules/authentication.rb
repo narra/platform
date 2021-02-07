@@ -48,6 +48,11 @@ module Narra
                 info[:name] = auth['info']['name'].nil? ? auth['info']['nickname'] : auth['info']['name']
                 info[:email] = auth['info']['email']
                 info[:image] = auth['info']['image']
+              when :gitlab
+                info[:username] = auth['info']['username']
+                info[:name] = auth['info']['name'].nil? ? auth['info']['username'] : auth['info']['name']
+                info[:email] = auth['info']['email']
+                info[:image] = auth['info']['image']
             end
 
             unless @auth = Narra::Identity.find_from_hash(info)

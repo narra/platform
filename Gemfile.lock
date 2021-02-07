@@ -241,6 +241,9 @@ GEM
     omniauth-github (1.4.0)
       omniauth (~> 1.5)
       omniauth-oauth2 (>= 1.4.0, < 2.0)
+    omniauth-gitlab (2.0.0)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.0)
     omniauth-google-oauth2 (0.8.0)
       jwt (>= 2.0)
       omniauth (>= 1.1.1)
@@ -380,6 +383,7 @@ DEPENDENCIES
   narra-core!
   omniauth
   omniauth-github
+  omniauth-gitlab
   omniauth-google-oauth2
   omniauth-oauth2
   rack-cors
