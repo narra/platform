@@ -58,7 +58,7 @@ module Narra
             unless @auth = Narra::Identity.find_from_hash(info)
               # Create a new user or add an auth to existing user, depending on
               # whether there is already a user signed in.
-              @auth = Narra::Identity.create_from_hash(info, Narra::User.where(name: info[:name]).first)
+              @auth = Narra::Identity.create_from_hash(info, Narra::User.where(email: info[:email]).first)
             end
 
             # prepare payload

@@ -51,7 +51,7 @@ module Narra
 
         expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model| filter?('scenario', [:detail_library]) }
 
-        expose :projects, format_with: :projects, unless: lambda { |model, options| filter?('projects', [:detail_library]) or (options[:types] and options[:filters].include?(:public_library)) }
+        expose :projects, format_with: :projects, unless: lambda { |model, options| filter?('projects', [:detail_library]) or (options[:types] and options[:types].include?(:public_library)) }
 
         format_with :projects do |projects|
           projects.collect { |project| {id: project.id, name: project.name, author: {username: project.author.username, name: project.author.name}} }

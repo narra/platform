@@ -41,7 +41,7 @@ module Narra
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
-              present_object(items, project.libraries, Narra::API::Entities::Library, public ? ['public'] : [])
+              present_object(project.libraries, Library, Narra::API::Entities::Library, public ? ['public'] : [])
             end
           end
 

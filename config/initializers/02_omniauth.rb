@@ -47,6 +47,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     # Gitlab OAuth2 Provider
     provider :gitlab, ENV['GITLAB_CLIENT_ID'], ENV['GITLAB_CLIENT_SECRET'],
              {
+               scope: 'read_user',
                client_options: {
                  site: "#{ENV['GITLAB_CLIENT_SERVER']}/api/v4"
                }

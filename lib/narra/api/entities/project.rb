@@ -36,7 +36,7 @@ module Narra
 
         expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model, options| filter?('scenario', [:detail_project]) }
 
-        expose :public, unless: lambda { |model, options| filter?('public', [:public_item]) } do |model|
+        expose :public, unless: lambda { |model| filter?('public') } do |model|
           model.is_public?
         end
 
