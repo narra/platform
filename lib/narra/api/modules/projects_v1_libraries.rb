@@ -33,7 +33,7 @@ module Narra
         helpers Narra::API::Helpers::Generic
         helpers Narra::API::Helpers::Attributes
 
-        resource :libraries do
+        resource :projects do
 
           desc 'Return project libraries.'
           get ':id/libraries' do
