@@ -48,7 +48,7 @@ module Narra
         expose :libraries, using: Narra::API::Entities::Library, unless: lambda { |model| filter?('libraries', [:detail_project]) }
 
         expose :metadata, using: Narra::API::Entities::Meta, unless: lambda { |model| filter?('metadata', [:detail_project]) } do |model|
-          model.meta.select { |meta| !meta.hidden }
+          model.meta.select { |meta| !meta.hidden }.sort_by { |meta| meta.name }
         end
       end
     end

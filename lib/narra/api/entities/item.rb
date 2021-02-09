@@ -58,7 +58,7 @@ module Narra
         include Narra::API::Entities::Templates::Video
         include Narra::API::Entities::Templates::Image
 
-        expose :meta, as: :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options| !filter?('metadata', [:public_item, :detail_item]) or (!options[:types].nil? and !(options[:types] & [:public_item]).empty? and !options[:generators].nil?) } do |model, options|
+        expose :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options| !filter?('metadata', [:public_item, :detail_item]) or (!options[:types].nil? and !(options[:types] & [:public_item]).empty? and !options[:generators].nil?) } do |model, options|
           if options[:type] == :public_item
             model.meta.where(public: true)
           elsif options[:generators].respond_to?(:each)

@@ -24,6 +24,8 @@ module Narra
     module Modules
       class ProjectsV1Items < Narra::API::Modules::Generic
 
+        include Grape::Kaminari
+
         version 'v1', :using => :path
         format :json
 
@@ -36,6 +38,9 @@ module Narra
         resource :projects do
 
           desc 'Return project items.'
+          params do
+            use :pagination, per_page: 50, max_per_page: 200, offset: 0
+          end
           get ':id/items' do
             return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
               # get authorized
@@ -45,7 +50,7 @@ module Narra
               # query
               items = Narra::Item.libraries(libraries).asc(:name)
               # present
-              present_object(items, Item, Narra::API::Entities::Item, public ? ['public'] : [], {generators: params[:generators]})
+              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [], {generators: params[:generators]})
             end
           end
 

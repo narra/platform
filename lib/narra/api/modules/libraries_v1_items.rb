@@ -24,6 +24,8 @@ module Narra
     module Modules
       class LibrariesV1Items < Narra::API::Modules::Generic
 
+        include Grape::Kaminari
+
         version 'v1', :using => :path
         format :json
 
@@ -35,22 +37,16 @@ module Narra
 
         resource :libraries do
 
+          params do
+            use :pagination, per_page: 50, max_per_page: 200, offset: 0
+          end
           desc 'Return a specific library items.'
           get ':id/items' do
             return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless public || (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
               # present
-              present_object(library.items.asc(:name), Item, Narra::API::Entities::Item)
-            end
-          end
-
-          get ':id/items/selection/:from/:to' do
-            return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
-              # get authorized
-              error_not_authorized! unless public || (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
-              # present
-              present_object(library.items.asc(:name).skip(params[:from].to_i).limit(params[:to].to_i-params[:from].to_i), Item, Narra::API::Entities::Item)
+              present_object(paginate(library.items.asc(:name)), Item, Narra::API::Entities::Item)
             end
           end
           

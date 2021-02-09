@@ -58,7 +58,7 @@ module Narra
         end
 
         expose :metadata, using: Narra::API::Entities::Meta, unless: lambda { |model| filter?('metadata', [:detail_library]) } do |model|
-          model.meta.select { |meta| !meta.hidden }
+          model.meta.select { |meta| !meta.hidden }.sort_by { |meta| meta.name }
         end
       end
     end
