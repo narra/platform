@@ -1,5 +1,6 @@
+
 #
-# Copyright (C) 2020 narra.eu
+# Copyright (C) 2021 narra.eu
 #
 # This file is part of Narra Platform Core.
 #
@@ -16,21 +17,30 @@
 # You should have received a copy of the GNU General Public License
 # along with Narra Platform Core. If not, see <http://www.gnu.org/licenses/>.
 #
-# Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
+# Authors: Michal Mocnak <michal@narra.eu>
 #
-
-require 'narra/api/helpers/array'
-require 'narra/api/helpers/attributes'
-require 'narra/api/helpers/error'
-require 'narra/api/helpers/filter'
-require 'narra/api/helpers/generic'
-require 'narra/api/helpers/present'
-require 'narra/api/helpers/query'
-require 'narra/api/helpers/user'
 
 module Narra
   module API
     module Helpers
+      module Query
+        def query(criteria)
+          if params[:query]
+            # prepare params
+            fields = params[:query_fields] ? params[:query_fields] : ['name', 'meta.value']
+            operator = params[:query_operator] ? params[:query_operator].to_sym : :or
+            query = params[:query]
+            # do the query
+            if operator.equal?(:or)
+              return criteria.any_of(fields.collect { |field| { :"#{field}" => /#{query}/i } })
+            else
+              return criteria.all_of(fields.collect { |field| { :"#{field}" => /#{query}/i } })
+            end
+          end
+          # return untouched
+          return criteria
+        end
+      end
     end
   end
 end

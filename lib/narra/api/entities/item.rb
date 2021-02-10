@@ -58,11 +58,13 @@ module Narra
         include Narra::API::Entities::Templates::Video
         include Narra::API::Entities::Templates::Image
 
-        expose :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options| !filter?('metadata', [:public_item, :detail_item]) or (!options[:types].nil? and !(options[:types] & [:public_item]).empty? and !options[:generators].nil?) } do |model, options|
-          if options[:type] == :public_item
-            model.meta.where(public: true)
-          elsif options[:generators].respond_to?(:each)
-            model.meta.where(public: true, generator: { '$in': options[:generators] })
+        expose :metadata, using: Narra::API::Entities::MetaItem, safe: true, if: lambda { |model, options| !filter?('metadata', [:detail_item]) or (!options[:types].nil? and !(options[:types] & [:public_item]).empty? and !options[:meta].nil?) } do |model, options|
+          if options[:meta].respond_to?(:each)
+            if options[:meta].include?('all')
+              model.meta.where(public: true)
+            else
+              model.meta.where(public: true, generator: { '$in': options[:meta] })
+            end
           else
             model.meta
           end

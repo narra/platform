@@ -34,6 +34,7 @@ module Narra
         helpers Narra::API::Helpers::Present
         helpers Narra::API::Helpers::Generic
         helpers Narra::API::Helpers::Attributes
+        helpers Narra::API::Helpers::Query
 
         resource :projects do
 
@@ -47,10 +48,10 @@ module Narra
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # resolve libraries selection
               libraries = params[:libraries] ? params[:libraries] : project.library_ids
-              # query
-              items = Narra::Item.libraries(libraries).asc(:name)
+              # query items
+              items = query(Narra::Item.libraries(libraries)).asc(:name)
               # present
-              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [], {generators: params[:generators]})
+              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [], { meta: params[:meta] })
             end
           end
 
