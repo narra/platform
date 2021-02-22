@@ -41,14 +41,22 @@ module Narra
           true
         end
 
-        expose :library, format_with: :library, unless: lambda { |model| filter?('library', [:detail_item]) }
+        expose :library, format_with: :detail_library, unless: lambda { |model| filter?('library', [:detail_item]) }
 
-        format_with :library do |library|
+        format_with :detail_library do |library|
           {
             id: library._id.to_s,
             name: library.name,
             author: { username: library.author.username, name: library.author.name },
             contributors: library.contributors.collect { |user| { username: user.username, name: user.name } }
+          }
+        end
+
+        expose :library, format_with: :public_library, unless: lambda { |model| filter?('library', [:public_item]) }
+
+        format_with :public_library do |library|
+          {
+            id: library._id.to_s
           }
         end
 
