@@ -47,6 +47,8 @@ module Narra
 
           desc 'Check new item.'
           post 'check' do
+            authenticate!
+            # check for requirements
             required_attributes! [:url]
             # parse url to get appropriate object
             proxies = Narra::Core.check_item(params[:url])
