@@ -92,8 +92,20 @@ module Narra
               unless library.purged
                 library.update_attributes(purged: true)
                 # execute
-                Narra::Core.purge_library(library)
+                Narra::Core.purge_library(library._id.to_s)
               end
+              # present
+              present_object_generic(:id, params[:id])
+            end
+          end
+
+          desc 'Clean a specific library.'
+          get ':id/clean' do
+            return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
+              # get authorized
+              error_not_authorized! unless (roles & [:admin, :author]).size > 0
+              # execute
+              Narra::Core.purge_items(library_id: library._id.to_s)
               # present
               present_object_generic(:id, params[:id])
             end

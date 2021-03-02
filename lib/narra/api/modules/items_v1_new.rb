@@ -41,30 +41,29 @@ module Narra
             authenticate!
             # authorization
             error_not_authorized! unless authorize([:author]).size > 0
-            # items log
-            items = []
-            errors = []
+            # events container
+            events = []
             # check for items
             if params[:candidates].respond_to?('each')
+              # proxies container
+              proxies = []
               # iterate over all items
               params[:candidates].each do |candidate|
                 # trying to get library
                 library = Library.find(candidate[:library])
-                # parse proxy
-                proxy = Narra::Tools::Proxy.parse(candidate[:proxy])
                 # add new item
-                begin
-                  items << Narra::Core.add_item(proxy, library, current_user)
-                rescue => error
-                  errors << {
-                      message: "Item #{proxy.name} failed.",
-                      trace: [candidate.to_json, error.full_message]
-                  }
-                end
+                proxies << { library_id: library._id.to_s, proxy: candidate[:proxy] }
+              end
+              # group proxies by library
+              grouped = proxies.group_by { |proxy| proxy[:library_id] }
+              # create bulks per library
+              grouped.keys.each do |library|
+                # process groups
+                Narra::Core.add_items(grouped[library].collect { |proxy| proxy[:proxy]}, grouped[library][0][:library_id], current_user._id.to_s)
               end
             end
             # present stats
-            present_object_generic(:ids, items.collect { |item| item._id.to_s }, errors)
+            present_object_generic(:events, events.collect { |event| event._id.to_s })
           end
         end
       end

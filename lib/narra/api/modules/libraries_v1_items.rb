@@ -52,6 +52,22 @@ module Narra
               present_object(paginate(items), Item, Narra::API::Entities::Item)
             end
           end
+
+          desc 'Delete a specific library items.'
+          post ':id/items/delete' do
+            required_attributes! [:items]
+            # process to delete
+            return_one_custom(Library, :id, true, [:author]) do |library, roles, public|
+              # get authorized
+              error_not_authorized! unless public || (roles & [:admin, :author, :contributor, :parent_author, :parent_contributor]).size > 0
+              # prove selection
+              items = library.items.any_in(_id: params[:items]).collect { |item| item._id.to_s }
+              # delete items
+              Narra::Core.purge_items(items_ids: items)
+              # present
+              present_object_generic(:ids, items)
+            end
+          end
           
           desc 'Return all values for specific meta field.'
           get ':id/items/metadata/:name' do
