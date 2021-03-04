@@ -49,6 +49,8 @@ module Narra
           model.contributors.collect { |user| {username: user.username, name: user.name} }
         end
 
+        expose :updated_at, unless: lambda { |model| filter?('updated_at') }
+
         expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model| filter?('scenario', [:detail_library]) }
 
         expose :projects, format_with: :projects, unless: lambda { |model, options| filter?('projects', [:detail_library]) or (options[:types] and options[:types].include?(:public_library)) }
