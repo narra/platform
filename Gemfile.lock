@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/narra/platform-auth.git
-  revision: db70003b66bdff708fe8d7f92854be2014a9d89a
+  revision: 152380a13d42ba8e1e8f5c1a2b789942e86a6166
   specs:
     narra-auth (0.4.2)
       grape (~> 1.5.3)
@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: d692396e4cb22845fe13c4591bf17bfa4a5b4a39
+  revision: 9345c6ef1f1a76258e330a6cea1be839b12c06f9
   specs:
     narra-core (0.4.2)
       aasm
@@ -34,7 +34,7 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-spi.git
-  revision: e22db6a46c3f70d89a24095da4da772e6482357b
+  revision: 10f271075a7020e151b36bc16c587d4e980d6106
   specs:
     narra-spi (0.4.2)
       carrierwave
@@ -44,7 +44,7 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-tools.git
-  revision: 3568a6faac221d1aff482b6d9bc23221a8837e98
+  revision: bb6be92170892c997fa1aaa3b382d9a01cba1f13
   specs:
     narra-tools (0.4.2)
       activesupport
