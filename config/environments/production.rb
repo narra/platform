@@ -111,4 +111,7 @@ Rails.application.configure do
 
   # Mongoid logging
   config.mongoid.logger.level = Logger::INFO
+
+  # Secret key
+  config.secret_key_base = ENV['SECRET_KEY_BASE']
 end
