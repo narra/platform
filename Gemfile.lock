@@ -409,6 +409,7 @@ DEPENDENCIES
   narra-core!
   narra-spi!
   narra-tools!
+  nokogiri (>= 1.12.5)
   omniauth-github
   omniauth-gitlab
   omniauth-google-oauth2

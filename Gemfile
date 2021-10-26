@@ -26,6 +26,7 @@ gem 'sidekiq-scheduler'
 gem 'tzinfo-data'
 gem 'rack-cors'
 gem 'mimemagic', '0.3.9'
+gem "nokogiri", ">= 1.12.5"
 
 # NARRA modules
 gem 'narra-spi', :github => 'narra/platform-spi'
