@@ -1,28 +1,11 @@
-#
-# Copyright (C) 2020 narra.eu
-#
-# This file is part of Narra Platform Core.
-#
-# Narra Platform Core is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Narra Platform Core is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Narra Platform Core. If not, see <http://www.gnu.org/licenses/>.
-#
-# Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
-#
+# Copyright: (c) 2021, Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
+# Copyright: (c) 2021, Narra Project
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 module Narra
   module API
     module Modules
-      class UsersV1 < Narra::API::Modules::Generic
+      class UsersV1 < Narra::API::Module
 
         version 'v1', :using => :path
         format :json
@@ -41,14 +24,14 @@ module Narra
             # authorize
             type = authorize([:admin]).size > 0 ? ['admin'] : []
             # present
-            present_object(User.all, User, Narra::API::Entities::User, type)
+            present_object(Narra::Auth::User.all, Narra::Auth::User, Narra::API::Entities::User, type)
           end
 
           desc "Return logged user in the current session."
           get 'me' do
             authenticate!
             # present
-            present_object(current_user, User, Narra::API::Entities::User, ['detail'])
+            present_object(current_user, Narra::Auth::User, Narra::API::Entities::User, ['detail'])
           end
 
           desc "Signout logged user in the current session."
@@ -70,19 +53,19 @@ module Narra
           end
 
           desc "Return a specific user."
-          get ':username' do
-            return_one(User, Narra::API::Entities::User, :username, true, [:admin])
+          get ':email' do
+            return_one(Narra::Auth::User, Narra::API::Entities::User, :email, true, [:admin])
           end
 
           desc "Delete a specific user."
-          get ':username/delete' do
-            delete_one(User, :username, true, [:admin])
+          get ':email/delete' do
+            delete_one(Narra::Auth::User, :email, true, [:admin])
           end
 
           desc "Update a user."
-          post ':username/update' do
+          post ':email/update' do
             required_attributes! [:roles]
-            update_one(User, Narra::API::Entities::User, :username, true, [:author]) do |user|
+            update_one(Narra::Auth::User, Narra::API::Entities::User, :email, true, [:author]) do |user|
               # gather new roles
               new_roles = params[:roles].collect { |role| role.to_sym }
               if user.roles.sort != new_roles.sort
@@ -93,8 +76,6 @@ module Narra
               end
               # change email if there is a change
               user.update_attributes(email: params[:email]) unless params[:email].nil? || user.email.equal?(params[:email])
-              # change username if there is a change
-              user.update_attributes(username: params[:new_username]) unless params[:new_username].nil? || user.username.equal?(params[:new_username])
             end
           end
         end

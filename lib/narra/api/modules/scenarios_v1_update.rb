@@ -1,28 +1,11 @@
-#
-# Copyright (C) 2020 narra.eu
-#
-# This file is part of Narra Platform Core.
-#
-# Narra Platform Core is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Narra Platform Core is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Narra Platform Core. If not, see <http://www.gnu.org/licenses/>.
-#
-# Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
-#
+# Copyright: (c) 2021, Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
+# Copyright: (c) 2021, Narra Project
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 module Narra
   module API
     module Modules
-      class ScenariosV1Update < Narra::API::Modules::Generic
+      class ScenariosV1Update < Narra::API::Module
 
         version 'v1', :using => :path
         format :json
@@ -39,7 +22,7 @@ module Narra
           desc 'Update a specific scenario.'
           post ':id/update' do
             update_one(Scenario, Narra::API::Entities::Scenario, :id, true, [:author]) do |scenario|
-              scenario.update_attributes(author: User.find_by(username: params[:author])) unless params[:author].nil? || scenario.author.username.equal?(params[:author])
+              scenario.update_attributes(author: Narra::Auth::User.find_by(email: params[:author])) unless params[:author].nil? || scenario.author.email.equal?(params[:author])
               scenario.shared = params[:shared] unless params[:shared].nil?
               scenario.name = params[:name] unless params[:name].nil? || scenario.name.equal?(params[:name])
               scenario.description = params[:description] unless params[:description].nil? || scenario.description.equal?(params[:description])

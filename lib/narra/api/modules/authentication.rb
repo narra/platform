@@ -1,28 +1,13 @@
- #
-# Copyright (C) 2020 narra.eu
-#
-# This file is part of Narra Platform Core.
-#
-# Narra Platform Core is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Narra Platform Core is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Narra Platform Core. If not, see <http://www.gnu.org/licenses/>.
-#
-# Authors: Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
-#
+# Copyright: (c) 2021, Michal Mocnak <michal@narra.eu>, Eric Rosenzveig <eric@narra.eu>
+# Copyright: (c) 2021, Narra Project
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+require 'jwt'
 
 module Narra
   module API
     module Modules
-      class Authentication < Narra::API::Modules::Generic
+      class Authentication < Narra::API::Module
 
         format :json
 
@@ -31,41 +16,37 @@ module Narra
         helpers do
           def handle_auth_response
             auth = request.env['omniauth.auth']
-            info = { uid: auth['uid'], provider: auth['provider'], username: nil, name: nil, email: nil, image: nil }
+            info = { uid: auth['uid'], provider: auth['provider'], name: nil, email: nil, image: nil }
 
             case auth['provider'].to_sym
               when :developer
-                info[:username] = auth['info']['name'].downcase.tr(' ', '_')
                 info[:name] = auth['info']['name']
                 info[:email] = auth['info']['email']
               when :google
-                info[:username] = auth['info']['name'].downcase.tr(' ', '_')
                 info[:name]= auth['info']['name']
                 info[:email] = auth['info']['email']
                 info[:image] = auth['info']['image']
               when :github
-                info[:username] = auth['info']['nickname']
                 info[:name] = auth['info']['name'].nil? ? auth['info']['nickname'] : auth['info']['name']
                 info[:email] = auth['info']['email']
                 info[:image] = auth['info']['image']
               when :gitlab
-                info[:username] = auth['info']['username']
                 info[:name] = auth['info']['name'].nil? ? auth['info']['username'] : auth['info']['name']
                 info[:email] = auth['info']['email']
                 info[:image] = auth['info']['image']
             end
 
-            unless @auth = Narra::Identity.find_from_hash(info)
+            unless @auth = Narra::Auth::Identity.find_from_hash(info)
               # Create a new user or add an auth to existing user, depending on
               # whether there is already a user signed in.
-              @auth = Narra::Identity.create_from_hash(info, Narra::User.where(email: info[:email]).first)
+              @auth = Narra::Auth::Identity.create_from_hash(info, Narra::Auth::User.where(email: info[:email]).first)
             end
 
             # prepare payload
             payload = {:uid => info[:uid]}
 
             # get token
-            @token = ::JWT.encode payload, Narra::JWT::RSA_PRIVATE, 'RS256'
+            @token = ::JWT.encode payload, Narra::Auth::JWT::RSA_PRIVATE, 'RS256'
 
             # get back to origin path or return token
             if request.env['omniauth.origin']
