@@ -25,8 +25,9 @@ module Narra
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Add endpoint into hosts
+    # Add endpoints into hosts
     config.hosts << ENV['NARRA_API_HOSTNAME']
+    config.hosts << ENV['NARRA_STORAGE_HOSTNAME']
 
     # Disable master key usage
     config.require_master_key = false

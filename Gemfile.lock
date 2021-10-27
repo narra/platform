@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: 1a083d7bc1012bcdcf55a2f57d97613d35247fc9
+  revision: 5e5b4f2954771f404a99f7f7b3dd020c7c5003aa
   specs:
     narra-core (0.4.2)
       aasm
