@@ -34,11 +34,16 @@ module Narra
             # check for requirements
             required_attributes! [:url]
             # parse url to get appropriate object
-            proxies = Narra::Core.check_item(params[:url])
-            # if nil return error
-            error_not_found! if proxies.nil? or proxies.empty?
-            # otherwise return proper item proxy
-            present_object_generic_options(:proxies, proxies, {with: Narra::API::Entities::Proxy })
+            begin
+              proxies = Narra::Core.check_item(params[:url])
+            rescue => e
+              present_object_generic(:proxies, [], [{ message: e.message, trace: e.backtrace }])
+            else
+              # if nil return error
+              error_not_found! if proxies.nil? or proxies.empty?
+              # otherwise return proper item proxy
+              present_object_generic_options(:proxies, proxies, { with: Narra::API::Entities::Proxy })
+            end
           end
 
           desc 'Delete a specific item.'

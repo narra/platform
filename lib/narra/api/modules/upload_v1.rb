@@ -23,12 +23,17 @@ module Narra
             # only authenticated users can upload
             authenticate!
             # prepare ingest object and upload
-            ingest = Narra::Ingest.new
-            ingest.name = params[:file][:filename]
-            ingest.file = params[:file][:tempfile]
-            ingest.save!
-            # return
-            present_object_generic(:ingest, {url: ingest.file.url })
+            begin
+              ingest = Narra::Ingest.new
+              ingest.name = params[:file][:filename]
+              ingest.file = params[:file][:tempfile]
+              ingest.save!
+            rescue => e
+              present_object_generic(:errors, [{ message: e.message, trace: e.backtrace }])
+            else
+              # return
+              present_object_generic(:ingest, { url: ingest.file.url })
+            end
           end
         end
       end
