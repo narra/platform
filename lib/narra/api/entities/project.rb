@@ -12,11 +12,7 @@ module Narra
         expose :id, unless: lambda { |model| filter?('id') }
         expose :name, unless: lambda { |model| filter?('name') }
         expose :description, unless: lambda { |model| filter?('description') }
-
-        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
-          { email: model.author.email, name: model.author.name }
-        end
-
+        expose :author, using: Narra::API::Entities::User, unless: lambda { |model| filter?('author') }
         expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model, options| filter?('scenario', [:detail_project]) }
 
         expose :public, unless: lambda { |model| filter?('public') } do |model|
@@ -26,7 +22,7 @@ module Narra
         include Narra::API::Entities::Templates::Thumbnails
 
         expose :contributors, unless: lambda { |model| filter?('contributors') } do |model, options|
-          model.contributors.collect { |user| {email: user.email, name: user.name} }
+          model.contributors.collect { |user| { id: user._id.to_s, email: user.email, name: user.name } }
         end
         expose :libraries, using: Narra::API::Entities::Library, unless: lambda { |model| filter?('libraries', [:detail_project]) }
 

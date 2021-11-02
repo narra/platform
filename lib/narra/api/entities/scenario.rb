@@ -16,11 +16,7 @@ module Narra
         expose :name, unless: lambda { |model| filter?('name') }
         expose :description, unless: lambda { |model| filter?('description') }
         expose :type, unless: lambda { |model| filter?('type') }
-
-        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
-          { email: model.author.email, name: model.author.name }
-        end
-
+        expose :author, using: Narra::API::Entities::User, unless: lambda { |model| filter?('author') }
         expose :updated_at, unless: lambda { |model| filter?('updated_at') }
 
         expose :shared, unless: lambda { |model| filter?('shared') } do |model, options|

@@ -16,9 +16,7 @@ module Narra
         expose :name, unless: lambda { |model| filter?('name') }
         expose :description, unless: lambda { |model| filter?('description') }
 
-        expose :author, unless: lambda { |model| filter?('author') } do |model, options|
-          {email: model.author.email, name: model.author.name}
-        end
+        expose :author, using: Narra::API::Entities::User, unless: lambda { |model| filter?('author') }
 
         expose :shared, unless: lambda { |model| filter?('shared') } do |model, options|
           model.is_shared?
@@ -29,7 +27,7 @@ module Narra
         include Narra::API::Entities::Templates::Thumbnails
 
         expose :contributors, unless: lambda { |model| filter?('contributors') } do |model, options|
-          model.contributors.collect { |user| {email: user.email, name: user.name} }
+          model.contributors.collect { |user| { id: user._id.to_s, email: user.email, name: user.name } }
         end
 
         expose :updated_at, unless: lambda { |model| filter?('updated_at') }
@@ -39,7 +37,7 @@ module Narra
         expose :projects, format_with: :projects, unless: lambda { |model, options| filter?('projects', [:detail_library]) or (options[:types] and options[:types].include?(:public_library)) }
 
         format_with :projects do |projects|
-          projects.collect { |project| {id: project.id, name: project.name, author: {email: project.author.email, name: project.author.name}} }
+          projects.collect { |project| { id: project.id, name: project.name, author: { email: project.author.email, name: project.author.name } } }
         end
 
         expose :metadata, using: Narra::API::Entities::Meta, unless: lambda { |model| filter?('metadata', [:detail_library]) } do |model|

@@ -9,8 +9,12 @@ module Narra
 
         include Narra::API::Helpers::Filter
 
-        expose :name, unless: lambda { |model| filter?('name', [:admin_user, :detail_user]) }
-        expose :email, unless: lambda { |model| filter?('email', [:admin_user, :detail_user]) }
+        expose :id, unless: lambda { |model| filter?('id') } do |model, options|
+          model._id.to_s
+        end
+
+        expose :name, unless: lambda { |model| filter?('name') }
+        expose :email, unless: lambda { |model| filter?('email') }
         expose :image, unless: lambda { |model| filter?('image', [:admin_user, :detail_user]) }
         expose :roles, unless: lambda { |model| filter?('roles', [:admin_user, :detail_user]) }
 

@@ -13,13 +13,13 @@ require_relative 'entities/item'
 require_relative 'entities/proxy'
 require_relative 'entities/junction'
 require_relative 'entities/meta'
+require_relative 'entities/user'
 require_relative 'entities/scenario'
 require_relative 'entities/library'
 require_relative 'entities/mark_meta'
 require_relative 'entities/mark_sequence'
 require_relative 'entities/project'
 require_relative 'entities/sequence'
-require_relative 'entities/user'
 
 module Narra
   module API
