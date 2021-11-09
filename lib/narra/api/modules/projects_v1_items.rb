@@ -25,8 +25,8 @@ module Narra
           params do
             use :pagination, per_page: 50, max_per_page: 200, offset: 0
           end
-          get ':id/items' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/items' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # resolve libraries selection
@@ -39,8 +39,8 @@ module Narra
           end
 
           desc 'Return project item.'
-          get ':id/items/:item' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/items/:item' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present

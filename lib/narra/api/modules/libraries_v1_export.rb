@@ -5,7 +5,7 @@
 module Narra
   module API
     module Modules
-      class ProjectsV1Export < Narra::API::Module
+      class LibrariesV1Export < Narra::API::Module
 
         version 'v1', :using => :path
         format :json
@@ -15,18 +15,18 @@ module Narra
         helpers Narra::API::Helpers::Present
         helpers Narra::API::Helpers::Generic
         helpers Narra::API::Helpers::Attributes
-        helpers Narra::API::Helpers::Query
+        helpers Narra::API::Helpers::Array
 
-        resource :projects do
-          desc 'Export project metadata.'
-          get ':identifier/export' do
-            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
+        resource :libraries do
+          desc 'Export library metadata.'
+          get ':id/export' do
+            return_one_custom(Library, :id, false, [:author]) do |library, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # create return object
               return_object = Narra::Return.create(user: current_user)
               # export
-              Narra::Core.export(project, return_object._id.to_s, current_user._id.to_s)
+              Narra::Core.export(library, return_object._id.to_s, current_user._id.to_s)
               # present
               present_object_generic(:return, { id: return_object._id.to_s })
             end

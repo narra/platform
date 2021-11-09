@@ -29,15 +29,15 @@ module Narra
             # prepare
             validation = false
             # check if there is a project by the name or title
-            validation = true if params[:id] && Narra::Project.where(id: params[:id]).count == 0
+            validation = true if params[:id] && Narra::Project.where(identifier: params[:id]).count == 0
             #validation = true if params[:title] && Narra::Project.where(title: params[:title]).count == 0
             # if the project exists return ok
             present_object_generic(:validation, validation)
           end
 
           desc 'Return a specific project.'
-          get ':id' do
-            return_one(Project, Narra::API::Entities::Project, :id, false, [:author])
+          get ':identifier' do
+            return_one(Project, Narra::API::Entities::Project, :identifier, false, [:author])
           end
 
           desc 'Create new project.'
@@ -50,7 +50,7 @@ module Narra
             # get scenario
             scenario = Narra::Scenario.find(params[:scenario][:id])
             # prepare params
-            parameters = {_id: params[:id], author: author, contributors: contributors, scenario: scenario}
+            parameters = {identifier: params[:id], author: author, contributors: contributors, scenario: scenario}
             # create new project
             new_one(Project, Narra::API::Entities::Project, true, [:author], parameters) do |project|
               # save name and description as it's stored as meta field
@@ -60,8 +60,8 @@ module Narra
           end
 
           desc 'Delete a specific project.'
-          get ':id/delete' do
-            delete_one(Project, :id, true, [:author])
+          get ':identifier/delete' do
+            delete_one(Project, :identifier, true, [:author])
           end
         end
       end

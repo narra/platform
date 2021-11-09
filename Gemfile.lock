@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: 0759baa62868fa76fecbde33fdec5d4934b110fa
+  revision: cf6346a2cd250d0c44246e729b2a8d84d440dd79
   specs:
-    narra-core (0.4.3)
+    narra-core (0.4.4)
       aasm
       carrierwave-mongoid
       carrierwave-video
@@ -44,9 +44,9 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-tools.git
-  revision: bb6be92170892c997fa1aaa3b382d9a01cba1f13
+  revision: b6918a6af9f35481bb2f554fc6d82991f20843a8
   specs:
-    narra-tools (0.4.2)
+    narra-tools (0.4.3)
       activesupport
       rack (~> 2.2.3)
       wisper

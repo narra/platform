@@ -19,8 +19,8 @@ module Narra
         resource :projects do
 
           desc 'Return project junctions based on synthesizer.'
-          get ':id/junctions/:synthesizer' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/junctions/:synthesizer' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
@@ -29,8 +29,8 @@ module Narra
           end
 
           desc 'Return junction items based on synthesizer.'
-          get ':id/junctions/:synthesizer/items' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/junctions/:synthesizer/items' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present

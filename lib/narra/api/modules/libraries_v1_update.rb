@@ -18,7 +18,6 @@ module Narra
         helpers Narra::API::Helpers::Array
 
         resource :libraries do
-
           desc 'Update a specific library.'
           post ':id/update' do
             update_one(Library, Narra::API::Entities::Library, :id, true, [:author]) do |library|

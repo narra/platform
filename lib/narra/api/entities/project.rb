@@ -9,7 +9,10 @@ module Narra
 
         include Narra::API::Helpers::Filter
 
-        expose :id, unless: lambda { |model| filter?('id') }
+        expose :id, unless: lambda { |model| filter?('id') } do |model|
+          model.identifier
+        end
+
         expose :name, unless: lambda { |model| filter?('name') }
         expose :description, unless: lambda { |model| filter?('description') }
         expose :author, using: Narra::API::Entities::User, unless: lambda { |model| filter?('author') }

@@ -15,7 +15,6 @@ module Narra
         helpers Narra::API::Helpers::Present
 
         resource :returns do
-
           desc 'Get return object'
           get ':id' do
             # only authenticated users can upload

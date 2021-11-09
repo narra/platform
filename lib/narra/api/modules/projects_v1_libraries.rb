@@ -19,8 +19,8 @@ module Narra
         resource :projects do
 
           desc 'Return project libraries.'
-          get ':id/libraries' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/libraries' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
@@ -29,8 +29,8 @@ module Narra
           end
 
           desc 'Return project item.'
-          get ':id/libraries/:library' do
-            return_one_custom(Project, :id, false, [:author]) do |project, roles, public|
+          get ':identifier/libraries/:library' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
               # get authorized
               error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
               # present
