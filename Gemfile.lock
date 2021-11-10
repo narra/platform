@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-core.git
-  revision: cf6346a2cd250d0c44246e729b2a8d84d440dd79
+  revision: 2e1c9df0dd0ee22e0bb46017ce0363977dffc848
   specs:
-    narra-core (0.4.4)
+    narra-core (0.4.5)
       aasm
       carrierwave-mongoid
       carrierwave-video
@@ -220,9 +220,9 @@ GEM
     grape-kaminari (0.4.1)
       grape (>= 1.0, != 1.4.0)
       kaminari-grape
-    hashie (4.1.0)
+    hashie (5.0.0)
     hiredis (0.6.3)
-    i18n (1.8.10)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
@@ -300,7 +300,7 @@ GEM
       oauth2 (~> 1.1)
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.7.1)
-    omniauth-oauth2 (1.7.1)
+    omniauth-oauth2 (1.7.2)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
     public_suffix (4.0.6)
@@ -355,7 +355,7 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.8.0)
       fugit (~> 1.1, >= 1.1.6)
-    sidekiq (6.2.2)
+    sidekiq (6.3.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
