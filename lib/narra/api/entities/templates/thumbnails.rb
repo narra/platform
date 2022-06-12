@@ -33,7 +33,8 @@ module Narra
           end
 
           def empty_thumbnail_url(type)
-            "http://#{options[:env]['HTTP_HOST']}/images/#{type}.png"
+            # TODO get protocol from env
+            "https://#{options[:env]['HTTP_HOST']}/images/#{type}.png"
           end
         end
       end
