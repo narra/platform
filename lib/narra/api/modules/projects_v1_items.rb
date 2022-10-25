@@ -34,7 +34,7 @@ module Narra
               # query items
               items = query(Narra::Item.libraries(libraries)).asc(:name)
               # present
-              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [], { meta: params[:meta] })
+              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [],)
             end
           end
 
@@ -50,7 +50,7 @@ module Narra
               # prepare stats
               stats = { count: items.size, first: items.first, last: items.last }
               # present
-              present_object(stats, :stats, Narra::API::Entities::Stats, public ? ['public'] : [], { meta: params[:meta] })
+              present_object_generic_options(:stats, stats, { with: Narra::API::Entities::Stats, types: public ? ['public'] : [], options: { meta: params[:meta] } })
             end
           end
 
