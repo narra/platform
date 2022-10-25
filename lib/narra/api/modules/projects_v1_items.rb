@@ -38,6 +38,22 @@ module Narra
             end
           end
 
+          desc 'Return project items stats.'
+          get ':identifier/items/stats' do
+            return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
+              # get authorized
+              error_not_authorized! unless (roles & [:admin, :author, :contributor]).size > 0 || public
+              # resolve libraries selection
+              libraries = params[:libraries] ? params[:libraries] : project.library_ids
+              # query items
+              items = query(Narra::Item.libraries(libraries)).asc(:name)
+              # prepare stats
+              stats = { count: items.length, first: present_object(items.first, Item, Narra::API::Entities::Item, public ? ['public'] : []), last: present_object(items.last, Item, Narra::API::Entities::Item, public ? ['public'] : []) }
+              # present
+              present_object_generic(:stats, present(stats))
+            end
+          end
+
           desc 'Return project item.'
           get ':identifier/items/:item' do
             return_one_custom(Project, :identifier, false, [:author]) do |project, roles, public|
