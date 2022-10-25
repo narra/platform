@@ -7,6 +7,8 @@ module Narra
     module Entities
       class Stats < Grape::Entity
 
+        include Narra::API::Helpers::Filter
+
         expose :count
         expose :first, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('first') }
         expose :last, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('last') }
