@@ -34,7 +34,7 @@ module Narra
               # query items
               items = query(Narra::Item.libraries(libraries)).asc(:name)
               # present
-              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [],)
+              present_object(paginate(items), Item, Narra::API::Entities::Item, public ? ['public'] : [], { meta: params[:meta] })
             end
           end
 
