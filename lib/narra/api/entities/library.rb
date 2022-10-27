@@ -30,6 +30,12 @@ module Narra
           model.contributors.collect { |user| { id: user._id.to_s, email: user.email, name: user.name } }
         end
 
+        expose :stats, unless: lambda { |model| filter?('stats') } do |model, options|
+          {
+            items: model.items.length
+          }
+        end
+
         expose :updated_at, unless: lambda { |model| filter?('updated_at') }
 
         expose :scenario, using: Narra::API::Entities::Scenario, unless: lambda { |model| filter?('scenario', [:detail_library]) }
