@@ -32,7 +32,7 @@ module Narra
 
         expose :stats, unless: lambda { |model| filter?('stats') } do |model, options|
           {
-            items: model.items.length
+            count: model.items.length
           }
         end
 
