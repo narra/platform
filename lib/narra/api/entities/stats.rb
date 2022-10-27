@@ -10,8 +10,10 @@ module Narra
         include Narra::API::Helpers::Filter
 
         expose :count
-        expose :first, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('first') }, options: options
-        expose :last, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('last') }, options: options
+        with_options do
+          expose :first, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('first') }
+          expose :last, using: Narra::API::Entities::Item, unless: lambda { |model| filter?('last') }
+        end
       end
     end
   end
