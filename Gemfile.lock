@@ -44,7 +44,7 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-tools.git
-  revision: 11315537723831e4b74b5591fdec51d3566ee5a3
+  revision: c883debced4892bac15209cb398ec4493b75c92e
   specs:
     narra-tools (0.4.5)
       activesupport
