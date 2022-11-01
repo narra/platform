@@ -30,11 +30,7 @@ module Narra
           model.contributors.collect { |user| { id: user._id.to_s, email: user.email, name: user.name } }
         end
 
-        expose :stats, unless: lambda { |model| filter?('stats') } do |model, options|
-          {
-            count: Narra::Item.where(:library_id => model._id.to_s).count
-          }
-        end
+        expose :stats, unless: lambda { |model| filter?('stats') }
 
         expose :updated_at, unless: lambda { |model| filter?('updated_at') }
 
