@@ -44,9 +44,9 @@ GIT
 
 GIT
   remote: https://github.com/narra/platform-tools.git
-  revision: 0bb3cf625ee670d81faf1d5254c527aa2d134b50
+  revision: 11315537723831e4b74b5591fdec51d3566ee5a3
   specs:
-    narra-tools (0.4.4)
+    narra-tools (0.4.5)
       activesupport
       rack (~> 2.2.3)
       wisper
