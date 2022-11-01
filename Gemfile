@@ -38,5 +38,5 @@ gem 'narra-core', :github => 'narra/platform-core'
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'listen', '~> 3.3'
-  gem 'puma', '~> 5.0'
+  gem 'puma', '~> 5.6'
 end
