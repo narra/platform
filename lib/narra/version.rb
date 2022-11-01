@@ -3,5 +3,5 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 module Narra
-  VERSION = "0.4.12"
+  VERSION = "0.4.13"
 end
